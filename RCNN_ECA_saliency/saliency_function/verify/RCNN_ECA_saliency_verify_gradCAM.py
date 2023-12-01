@@ -372,8 +372,8 @@ def calculate_outputs_and_gradients(input, length, model, target_label_idx):
     gradsnp = gradsnp.transpose(0, 2, 1)   # 调整(batch, length, channel) -> (batch, channel, length),如果已经是(b,c,l)不需要调整
     featuresnp = output_feature.detach().cpu().data.numpy()
     featuresnp = featuresnp.transpose(0, 2, 1)  # 调整(batch, length, channel) -> (batch, channel, length),如果已经是(b,c,l)不需要调整
-    # create_cam(featuresnp, gradsnp, length, cam_list)
-    create_cam_pp(featuresnp, gradsnp, length, cam_list)
+    create_cam(featuresnp, gradsnp, length, cam_list)
+    # create_cam_pp(featuresnp, gradsnp, length, cam_list)
     gradient_list.append(gradsnp)
     
     return gradient_list, cam_list, target_label_idx
@@ -515,8 +515,8 @@ def visualize_protein_gradient(protein_list, gradients, lengths, dictionary, tru
 
 
         # 保存蛋白质的每个氨基酸和对应score
-        # save_dir_path = './RCNN_ECA_saliency/output/gradCAM/gradCAM_noSoftmax_outFinal_protein_score/FUS_family/'
-        save_dir_path = './RCNN_ECA_saliency/output/gradCAMpp/gradCAMpp_noSoftmax_outAll_protein_score/FUS_family/'
+        save_dir_path = './RCNN_ECA_saliency/output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/FUS_family/'
+        # save_dir_path = './RCNN_ECA_saliency/output/gradCAMpp/gradCAMpp_noSoftmax_outAll_protein_score/FUS_family/'
         if true_label[i] == 1:  # 阳性为1
 
             savepath = save_dir_path + 'pos_sequence_score.csv'
