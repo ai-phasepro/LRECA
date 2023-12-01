@@ -293,7 +293,7 @@ class RCNN(nn.Module):
         out = self.globalmaxpool(out_feature).squeeze()
         out = F.relu(out)
         out = self.linear(out)
-        return out, out_feature
+        return out, out_all
 
 
 def set_seed(seed):
@@ -333,9 +333,9 @@ def calculate_outputs_and_gradients(input, length, model, target_label_idx):
     gradient_feature = torch.autograd.grad(output, output_feature, torch.ones_like(output), True)
     gradient = gradient_feature[0]  
     gradsnp = gradient.detach().cpu().data.numpy()
-    # gradsnp = gradsnp.transpose(0, 2, 1)   # 调整(batch, length, channel) -> (batch, channel, length),如果已经是(b,c,l)不需要调整
+    gradsnp = gradsnp.transpose(0, 2, 1)   # 调整(batch, length, channel) -> (batch, channel, length),如果已经是(b,c,l)不需要调整
     featuresnp = output_feature.detach().cpu().data.numpy()
-    # featuresnp = featuresnp.transpose(0, 2, 1)  # 调整(batch, length, channel) -> (batch, channel, length),如果已经是(b,c,l)不需要调整
+    featuresnp = featuresnp.transpose(0, 2, 1)  # 调整(batch, length, channel) -> (batch, channel, length),如果已经是(b,c,l)不需要调整
     create_cam(featuresnp, gradsnp, length, cam_list)
     gradient_list.append(gradsnp)
     
@@ -478,7 +478,7 @@ def visualize_protein_gradient(protein_list, gradients, lengths, dictionary, tru
 
 
         # 保存蛋白质的每个氨基酸和对应score
-        save_dir_path = '../../output/gradCAM/gradCAM_noSoftmax_outFinal_protein_score/'
+        save_dir_path = '../../output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/'
         if true_label[i] == 1:  # 阳性为1
             # savepath = save_dir_path + '20211207_data/pos_sequence_score/RCNN_ECA_protein_score.csv'
             # savepath = save_dir_path + 'LLPS_data/pos_sequence_score/RCNN_ECA_protein_score.csv'
