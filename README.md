@@ -1,5 +1,31 @@
 # LRECA
 
+## Files
+
+This code contains two parts: protein phase separation characterization and traceability.
+The RCNN_model folder contains the characterization code.
+Specifically, it contains the code for LLPS and PDB, phaspDB_reviewed and PDB, phaspDB_highthroughput and PDB, mydata_1507 and PDB dataset training.
+The RCNN_ECA_saliency folder contains the feature traceability code. It specifically contains the LCRs_process, saliency_functi, and save_model folders.
+The LCRs_process folder contains read_LCRs_segment.py for comparative analysis with existing LCRs segments, and split_LCRs_segment.py for generating segments based on the probability density of the contribution value at each position of the amino acid sequence and highlighting the amino acid segment with the largest contribution value;
+The method folder in the saliency_functio folder contains the code for generating the contribution value at each position of the amino acid sequence, the statics folder contains the code for statistically analyzing the contribution value at each position of the amino acid sequence, and the RCNN_ECA_save_model.py file is used to save the trained model and parameters;
+The save_model folder saves the trained models and parameters for characterization detection.
+
+## Test_Dataset
+
+./processed_dataset contains processed data of three public datasets that are used in this paper, including LLPS, phaspDB_reviewed, phasepDB_highthroughput. 
+
+You can also visit our [website](http://www.ai-phasepro.pro/) for the whole datasets
+
+## Run Code
+
+### Install Requirement
+
+Code run with python=3.8&torch=2.1.1+cu118
+
+~~~python
+conda --name protein --file requirements.txt
+~~~
+
 ### To run our model
 
 ~~~python
