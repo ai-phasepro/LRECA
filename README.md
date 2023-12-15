@@ -1,26 +1,51 @@
 # LRECA
 
+A demo for testing our LRECA model for discerning phase-separation potential of proteins directly from AA sequences. This demo also examines the explainability of the model by interpreting the predictions to determine the influence of individual AAs and their sequential patterns on biomolecular condensation regulation. Companion code to the paper "Discovery of phase separation protein with single amino acid attributions by unbiased deep-learning".
+
+## Requirement
+
+This code was implemented using the Pytorch framework (version 1.12.1). More details have been described in the file “requirements.txt”. 
+
 ## Files
 
-This code contains two parts: protein phase separation characterization and traceability.
+The folder /RCNN_model contains four files, RCNN_ECA_3_LLPS.py, RCNN_ECA_3_R.py, RCNN_ECA_3_high.py, and RCNN_ECA_3_madata.py, which contain the code for training and testing the model using 10-fold cross validation on the datasets of LLPS and PDB, phaspDB_reviewed and PDB, phaspDB_highthroughput and PDB, and inhouse-dataset and PDB, respectively. 
 
-The RCNN_model folder contains the characterization code.
+The folder /RCNN_ECA_saliency contains the files for computing the contribution of each AA and AA segment. Specifically, /RCNN_ECA_saliency /saliency_function /method /RCNN_ECA_saliency_gradCAM.py contain the code for obtained the contribution of each AA. /RCNN_ECA_saliency /saliency_function /RCNN_ECA_save_model contain the well trained model and corresponding parameters. The folder /RCNN_ECA_saliency /LCRs_process contain the code for identifying the main contributing AA segments in a protein for LLPS based on the results of the contributions of each AA.
 
-Specifically, it contains the code for LLPS and PDB, phaspDB_reviewed and PDB, phaspDB_highthroughput and PDB, mydata_1507 and PDB dataset training.
+## Model
 
-The RCNN_ECA_saliency folder contains the feature traceability code. It specifically contains the LCRs_process, saliency_functi, and save_model folders.
+The architecture of the model is shown in Figure 1. LRECA model consists of four modules, i.e., embedding module, BiLSTMs, ECA module, and classification module. The model receives an input tensor with dimension (N, M), and returns an output tensor with dimension (N, 2), for which N is the batch size and M is the length of AA sequence. Output of the model: shape = (N, 2). The output contains two probabilities of LLPS and non-LLPS, between 0 and 1, and sum to 1.
 
-The LCRs_process folder contains read_LCRs_segment.py for comparative analysis with existing LCRs segments, and split_LCRs_segment.py for generating segments based on the probability density of the contribution value at each position of the amino acid sequence and highlighting the amino acid segment with the largest contribution value;
+ [2.tif](README.assets\2.tif) 
 
-The method folder in the saliency_functio folder contains the code for generating the contribution value at each position of the amino acid sequence, the statics folder contains the code for statistically analyzing the contribution value at each position of the amino acid sequence, and the RCNN_ECA_save_model.py file is used to save the trained model and parameters;
+**Figure 1. Architecture of the Length-variable Recurrent Efficient Channel Attention (LRECA) model. **
 
-The save_model folder saves the trained models and parameters for characterization detection.
+ **(A)** Schematic diagram of the model architecture. “.” denotes the concatenation of the two outputs; “×” signifies the multiplication of the two outputs; “+” represents the connection of the two outputs with a residual mode. **(B)** Workflow of the embedding layer. **(C)** Workflow of the data compression process in handling different feature lengths before inputting to the BiLSTM. **(D)** Workflow of the variable length global average pooling. GAP: global average pooling. **(E)** Schematic diagram of the ECANet.
+
+
+
+**Individual AA contribution analysis**
+
+Gradient-weighted Class Activation Mapping (Grad-CAM) was used to analysis the contribution of each AA or AA segment in a protein for LLPS, as shown in Figure 2.
+
+ [3.tif](README.assets\3.tif) 
+
+**Figure 2. Schematic illustration of the Grad-CAM based model explainability method**. N: negative; P: positive.
 
 ## Test_Dataset
 
 ./processed_dataset contains processed data of three public datasets that are used in this paper, including LLPS, phaspDB_reviewed, phasepDB_highthroughput. 
 
 You can also visit our [website](http://www.ai-phasepro.pro/) for the whole datasets
+
+## Results
+
+The results of classification are stored in the folder ./results/classification, including protein score, acc, sen, spe and auc.
+
+The results of saliency are stored in the folder ./results/output.
+
+Installation guide for running Demo
+
 
 ## Run Code
 
@@ -30,26 +55,21 @@ Code run with python=3.8&torch=2.1.1+cu118
 
 ~~~python
 conda --name protein --file requirements.txt
+conda activate protein
 ~~~
 
-### To run our model
+### To test our model
 
 ~~~python
-mkdir classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output
-cd RCNN_model # output for mydata
-python RCNN_ECA_3_mydata.py
+python test/test/RCNN_ECA_3_mydata_test.py
 ~~~
 
 ### Run with other datasets
 
 ```python
-mkdir classification_output/dataset_RCNN_ECA_output/LLPS_output/r3/RF_output # output for LLPS
-mkdir classification_output/dataset_RCNN_ECA_output/PhasepDB_Reviewed_output/RCNN_ECA_em1024_128_32_output # output for PhasepDB_Reviewed
-mkdir classification_output/dataset_RCNN_ECA_output/PhasepDB_high_throughput_output/RCNN_ECA_em1024_hidden128_128_32_output # output for PhasepDB_high_throughput
-cd RCNN_model
-python RCNN_ECA_3_LLPS.py # for LLPS
-python RCNN_ECA_3_R.py    # for PhasepDB_Reviewed
-python RCNN_ECA_3_high.py # for PhasepDB_high_throughput
+python test/test/RCNN_ECA_3_LLPS_test.py 
+python test/test/RCNN_ECA_3_high_test.py 
+python test/test/RCNN_ECA_3_R_test.py 
 ```
 
 ### Saliency
@@ -57,37 +77,25 @@ python RCNN_ECA_3_high.py # for PhasepDB_high_throughput
 __save LRECA model__
 
 ```python
-cd ECNN_ECA_saliency/saliency_function
-python RCNN_ECA_save_model.py
+python RCNN_ECA_saliency/saliency_function/RCNN_ECA_save_model.py
 ```
 
-__Get protein score and statics result__
+__Get protein score__
 
 ```python
-cd ECNN_ECA_saliency/saliency_function/method
-python RCNN_ECA_sliency_gradCAM.py
-```
-
-__process statics result (t-test、rank-sum-test)__
-
-```python
-cd ECNN_ECA_saliency/saliency_function/statics
-├─statics
-│      RCNN_ECA_statics2.py
-│      RCNN_ECA_statics2_1.py
-│      RCNN_ECA_statics3.py
-│      RCNN_ECA_statics3_1.py
-│      RCNN_ECA_statics4.py
-│      RCNN_ECA_statics4_1.py
-│      RCNN_ECA_statics5.py
-│      RCNN_ECA_statics5_1.py
-│      RCNN_ECA_statics_length_distribution.py
+python RCNN_ECA_saliency/saliency_function/method/RCNN_ECA_saliency_gradCAM.py
 ```
 
 __LCRs split__
 
 ```python
-cd ECNN_ECA_saliency/LCRs_process
-python split_LCRs_segment.py
+python RCNN_ECA_saliency/saliency_function/verify/RCNN_ECA_saliency_verify_gradCAM.py 
+python RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics2_FUS_test.py 
+python RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_FUS_test.py 
+python RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics2_FUS_train.py 
+python RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_FUS_train.py 
 ```
 
+## License
+
+The use of these publicly available datasets must comply with the provisions of these public data sets. This code is to be used only for educational and research purposes. Any commercial use, including the distribution, sale, lease, license, or other transfer of the code to a third party, is prohibited.
