@@ -16,7 +16,7 @@ The folder /RCNN_ECA_saliency contains the files for computing the contribution 
 
 The architecture of the model is shown in Figure 1. LRECA model consists of four modules, i.e., embedding module, BiLSTMs, ECA module, and classification module. The model receives an input tensor with dimension (N, M), and returns an output tensor with dimension (N, 2), for which N is the batch size and M is the length of AA sequence. Output of the model: shape = (N, 2). The output contains two probabilities of LLPS and non-LLPS, between 0 and 1, and sum to 1.
 
- [2.tif](./README.assets/2.png) 
+ ![2](./README.assets/2.tif) 
 
 __Figure 1. Architecture of the Length-variable Recurrent Efficient Channel Attention (LRECA) model.__
 
@@ -28,7 +28,7 @@ __Individual AA contribution analysis__
 
 Gradient-weighted Class Activation Mapping (Grad-CAM) was used to analysis the contribution of each AA or AA segment in a protein for LLPS, as shown in Figure 2.
 
- [3.tif](./README.assets/3.png) 
+ ![3](./README.assets/3.tif) 
 
 **Figure 2. Schematic illustration of the Grad-CAM based model explainability method**. N: negative; P: positive.
 
