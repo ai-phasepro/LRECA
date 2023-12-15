@@ -6,13 +6,13 @@ The source codes can be used to train and test the model with 10-fold cross vali
 
 ## Requirement
 
-This code was implemented using the Pytorch framework (version 2.1.1). More details have been described in the file “requirements.txt”. 
+This code was implemented using the Pytorch framework (version 2.1.1). More details have been described in the file “requirements.txt”.
 
 ## Files
 
 Sources codes included three folders, the /RCNN_model, the /Data, and the /RCNN_ECA_saliency. All codes of the demo are included in the fold /Demo.
 
-The folder /RCNN_model contains four files, RCNN_ECA_3_LLPS.py, RCNN_ECA_3_R.py, RCNN_ECA_3_high.py, and RCNN_ECA_3_madata.py, which contain the code for training and testing the model using 10-fold cross validation on the datasets of LLPS and PDB, phaspDB_reviewed and PDB, phaspDB_highthroughput and PDB, and inhouse-dataset and PDB, respectively. 
+The folder /RCNN_model contains four files, RCNN_ECA_3_LLPS.py, RCNN_ECA_3_R.py, RCNN_ECA_3_high.py, and RCNN_ECA_3_madata.py, which contain the code for training and testing the model using 10-fold cross validation on the datasets of LLPS and PDB, phaspDB_reviewed and PDB, phaspDB_highthroughput and PDB, and inhouse-dataset and PDB, respectively.
 
 The folder /Data contains the negative data from the PDB database and the positive data from public databases and the in-house dataset (mydata).
 
@@ -25,22 +25,19 @@ You can also visit our [website](http://www.ai-phasepro.pro/) for the whole data
 
 The architecture of the model is shown in Figure 1. LRECA model consists of four modules, i.e., embedding module, BiLSTMs, ECA module, and classification module. The model receives an input tensor with dimension (N, M), and returns an output tensor with dimension (N, 2), for which N is the batch size and M is the length of AA sequence. Output of the model: shape = (N, 2). The output contains two probabilities of LLPS and non-LLPS, between 0 and 1, and sum to 1.
 
- ![2](./README.assets/2.png) 
+ ![2](./README.assets/2.png)
 
 __Figure 1. Architecture of the Length-variable Recurrent Efficient Channel Attention (LRECA) model.__
 
  **(A)** Schematic diagram of the model architecture. “.” denotes the concatenation of the two outputs; “×” signifies the multiplication of the two outputs; “+” represents the connection of the two outputs with a residual mode. **(B)** Workflow of the embedding layer. **(C)** Workflow of the data compression process in handling different feature lengths before inputting to the BiLSTM. **(D)** Workflow of the variable length global average pooling. GAP: global average pooling. **(E)** Schematic diagram of the ECANet.
 
-
-
 ## Individual AA contribution analysis
 
 Gradient-weighted Class Activation Mapping (Grad-CAM) was used to analysis the contribution of each AA or AA segment in a protein for LLPS, as shown in Figure 2.
 
- ![3](./README.assets/3.png) 
+ ![3](./README.assets/3.png)
 
 **Figure 2. Schematic illustration of the Grad-CAM based model explainability method**. N: negative; P: positive.
-
 
 ## Run Demo
 
@@ -48,26 +45,28 @@ Gradient-weighted Class Activation Mapping (Grad-CAM) was used to analysis the c
 
 Code run with python=3.8&torch=2.1.1+cu118
 
-~~~python
+```python
 conda --name protein --file requirements.txt
 conda activate protein
 cd Demo
-~~~
+```
 
 ### To test our model
 
-~~~python
-python test/test/RCNN_ECA_3_mydata_test.py
-~~~
+```python
+python "code for model testing/RCNN_ECA_3_mydata_test.py"
+```
 
 ### Run with other datasets
 
 ```python
-python test/test/RCNN_ECA_3_LLPS_test.py 
-python test/test/RCNN_ECA_3_high_test.py 
-python test/test/RCNN_ECA_3_R_test.py 
+python "code for model testing/RCNN_ECA_3_LLPS_test.py"
+python "code for model testing/RCNN_ECA_3_high_test.py" 
+python "code for model testing/RCNN_ECA_3_R_test.py" 
 ```
+
 ### Classification Results
+
 The results of classification are stored in the folder ./Demo/classification_output, including protein score, accuracy, sensitivity, specificity and area under the ROC curve (AUC) for the four datasets.
 
 ### Saliency
@@ -93,8 +92,9 @@ python RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_FUS_test.py
 python RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics2_FUS_train.py 
 python RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_FUS_train.py 
 ```
+
 __Saliency results__
-The results of saliency are stored in the folder ./results/output.
+The results of saliency are stored in the folder ./Demo/output.
 
 ## License
 

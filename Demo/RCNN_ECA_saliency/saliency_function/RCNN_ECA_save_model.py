@@ -273,19 +273,8 @@ class RCNN(nn.Module):
         out = F.relu(out)
         out = out.permute(0, 2, 1)
         
-        # out1 = self.SEBlock(out, length)
-        
         out1 = self.ECABlock(out, length)
         out = out + out1
-  
-        # out1 = self.CABlock(out, length)
-        # out1 = self.SABlock(out1)
-        # out = out + out1  # 残差结构
-        
-        # out = out * self.alpha+ out1  # 残差结构
-        
-        # out = self.SEBlock(out, length)
-        # out = self.ECABlock(out, length)
         
         out = self.globalmaxpool(out).squeeze()
         out = F.relu(out)
@@ -294,8 +283,8 @@ class RCNN(nn.Module):
 
 
 def set_seed(seed):
-    torch.manual_seed(seed)            # 为CPU设置随机种子
-    torch.cuda.manual_seed(seed)       # 为当前GPU设置随机种子
+    torch.manual_seed(seed)           
+    torch.cuda.manual_seed(seed)     
     np.random.seed(seed)
     
     torch.backends.cudnn.deterministic = True
@@ -307,14 +296,10 @@ if __name__== '__main__':
     seed = 1
     set_seed(seed)
     root_dir = '.'
-    # pos_protein_dir = 'pos_word_list_LLPS.txt'
-    # pos_protein_dir = 'pos_word_list_PhasepDB_Reviewed.txt'
-    # pos_protein_dir = 'pos_word_list_PhasepDB_high_throughput.txt'
-    # pos_protein_dir = 'pos_word_list_20211208.txt'
-    pos_protein_dir = '/data/processed_dataset/pos_word_list_mydata_all_1507.txt'
+    pos_protein_dir = '../Data/pos_word_list_mydata_all_1507.txt'
     # neg_protein_dir = 'neg_word_list.txt'
-    neg_protein_dir = '/data/processed_dataset/neg_word_list_1479.txt'
-    save_dir = '/results/saliency_model'
+    neg_protein_dir = '../Data/neg_word_list_1479.txt'
+    save_dir = './saliency_model'
     save_path = os.path.join(root_dir, save_dir)
     
     if not os.path.exists(save_path):

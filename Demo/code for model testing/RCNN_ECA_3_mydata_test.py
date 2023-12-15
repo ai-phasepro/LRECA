@@ -92,16 +92,8 @@ def word2Num(train, test, min=0, max=None, max_features=None):
         for word in list:
             num2.append(dic.get(word))
         Num2.append(num2)
-    print(len(Num2))
-    # a1, a2 = [], []
-    # for list in train:
-    #     list = list.replace(' ', '')
-    #     a1.append(len(list))
-    # for num in Num:
-    #     a2.append(len(num))
-    # print(a1 == a2)    
+    print(len(Num2))  
     return Num, Num2, dic        
- 
 
 
 
@@ -154,7 +146,6 @@ class ECALayer(nn.Module):
                 y = x_avg.clone()
             else:
                 y = torch.cat((y, x_avg), dim=0)
-        # y = self.avg_pool(x).view(b,e,1)
 
         # Two different branches of ECA module
         y = self.conv(y.transpose(-1, -2)).transpose(-1, -2)
@@ -178,8 +169,6 @@ class SEBlock(nn.Module):
 
     def forward(self, x, length):
         b, e , t = x.size()
-        # Squeeze
-        # y = self.avg_pool(x).view(b, e)
         for i in range(b):
             x_pack = x[i][: , : length[i]].unsqueeze(0)
             x_avg = self.avg_pool(x_pack)
@@ -261,40 +250,29 @@ class RCNN(nn.Module):
             self.bi_num = 1
         self.biFlag = biFlag
         self.device = torch.device("cuda")
-        # alpha = torch.FloatTensor([alpha])
-        # self.alpha = nn.Parameter(alpha)
         self.ECABlock= ECALayer()
-        # self.CABlock = ChannelAttention()
-        # self.SABlock = SpatialAttention()
-        # self.SEBlock = SEBlock(self.bi_num*hidden_dim + embedding_num)
         self.embedding = nn.Embedding(vocab_size, embedding_num, padding_idx=0)   # 需要添加padding_idx
         self.lstm = nn.LSTM(input_size= embedding_num, hidden_size=hidden_dim, num_layers=num_layers, batch_first=True, bidirectional=biFlag)
         self.globalmaxpool = nn.AdaptiveMaxPool1d(1)
-        # self.globalavgpool = nn.AdaptiveAvgPool1d(1)
         self.linear = nn.Sequential(
             nn.Dropout(dropout),
 
             nn.Linear(self.bi_num*hidden_dim + embedding_num, 128),
-            # nn.Linear(self.bi_num*hidden_dim + embedding_num, 256),
-            # nn.Linear(2 * (self.bi_num*hidden_dim + embedding_num), 128),
             nn.ReLU(),
             nn.Dropout(dropout),
             nn.Linear(128,32),  # 32
-            # nn.Linear(256,2)
             nn.ReLU(),
             nn.Linear(32,2)  # 32
         )
         
     def forward(self, x, length):
-        embed = self.embedding(x) # 序列嵌入
-        x = pack_padded_sequence(embed, length.cpu(), batch_first=True) # 压缩
+        embed = self.embedding(x) 
+        x = pack_padded_sequence(embed, length.cpu(), batch_first=True) 
         x, (ht,ct) = self.lstm(x)
         out, out_len = pad_packed_sequence(x, batch_first=True)
         out = torch.cat((embed, out), 2)
         out = F.relu(out)
         out = out.permute(0, 2, 1)
-        
-        # out1 = self.SEBlock(out, length)
         
         out1 = self.ECABlock(out, length)
         out = out + out1
@@ -327,14 +305,14 @@ if __name__== '__main__':
     device = torch.device("cuda")
     seed = 1
     set_seed(seed)
-    root_dir =  '/data'
-    pos_protein_dir = 'processed_dataset/pos_dataset/pos_word_list_mydata_all_1507.txt'
-    neg_protein_dir = 'processed_dataset/neg_dataset/neg_word_list_1479.txt'
+    root_dir =  '../Data'
+    pos_protein_dir = 'pos_dataset/pos_word_list_mydata_all_1507.txt'
+    neg_protein_dir = 'neg_dataset/neg_word_list_1479.txt'
     pos_test_dir = 'test_dataset/pos_dataset/pos_word_list_mydata_test.txt'
     neg_test_dir = 'test_dataset/neg_dataset/neg_word_list_mydata_test.txt'
     save_dir = './save_model_mydata'
     save_path = os.path.join(root_dir, save_dir)
-    model_path = '/data/test_model/model_mydata_1.pt'
+    model_path = 'trained_model/model_mydata_1.pt'
     list_length = 1479 # pos:253, 592, 4644, 668, 1507 neg:1490, 1479
 
     # mydata_all_1507
@@ -350,10 +328,10 @@ if __name__== '__main__':
         pos_test_sequence,neg_test_sequence = readdata_test(root_dir, pos_test_dir, neg_test_dir)
         pos_sequence, neg_sequence = readdata(root_dir, pos_protein_dir, neg_protein_dir, list_length, pos_seed, neg_seed)
 
-        if not os.path.exists("/results/classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output"):
-            os.makedirs("/results/classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output")
-        auc_save_csv = '/results/classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output/rcnn_ECA_mydata_test_roc_{}.csv'.format((i+10))
-        result_save_csv = '/results/classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output/result.csv'
+        if not os.path.exists("./classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output"):
+            os.makedirs("./classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output")
+        auc_save_csv = './classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output/rcnn_ECA_mydata_test_roc_{}.csv'.format((i+10))
+        result_save_csv = './classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output/result.csv'
         df_test = pd.DataFrame(columns=['y_true', 'y_score'])
         df_test.to_csv(auc_save_csv, mode='w', index=False)    # rcnn_2使用全部数据， rcnn_1使用±668数据
         df_test = pd.DataFrame(columns=['acc', 'sen', 'spe', 'auc'])

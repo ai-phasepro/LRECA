@@ -73,16 +73,8 @@ def word2Num(train, test, min=0, max=None, max_features=None):
         for word in singlelist:
             num2.append(dic.get(word))
         Num2.append(num2)
-    print(len(Num2))
-    # a1, a2 = [], []
-    # for singlelist in train:
-    #     singlelist = singlelist.replace(' ', '')
-    #     a1.append(len(singlelist))
-    # for num in Num:
-    #     a2.append(len(num))
-    # print(a1 == a2)    
+    print(len(Num2))  
     return Num, Num2, dic        
- 
 
 
 
@@ -477,7 +469,7 @@ def visualize_protein_gradient(protein_list, gradients, lengths, dictionary, tru
 
 
         # 保存蛋白质的每个氨基酸和对应score
-        save_dir_path = '/results/output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/'
+        save_dir_path = './output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/'
         if true_label[i] == 1:
             savepath = save_dir_path + 'mydata_1507_data/pos_sequence_score/RCNN_ECA_protein_score.csv'
             if not os.path.exists(os.path.dirname(savepath)):
@@ -538,8 +530,8 @@ if __name__== '__main__':
     seed = 1
     set_seed(seed)
     root_dir = '.'
-    pos_protein_dir = '/data/processed_dataset/pos_dataset/pos_word_list_mydata_all_1507.txt'
-    neg_protein_dir = '/data/processed_dataset/neg_dataset/neg_word_list_1479.txt'
+    pos_protein_dir = '../Data/processed_dataset/pos_dataset/pos_word_list_mydata_all_1507.txt'
+    neg_protein_dir = '../Data/processed_dataset/neg_dataset/neg_word_list_1479.txt'
     
     pos_seed = 0
     neg_seed = 1
@@ -570,7 +562,7 @@ if __name__== '__main__':
     train_label_ten = from_numpy(train_label)
     train_label_ten = train_label_ten.type(torch.LongTensor)
 
-    state_dict = torch.load('/data/saliency_model/mydata_1507_RCNN_ECA_089-0.9930.pt')
+    state_dict = torch.load('./saliency_model/mydata_1507_RCNN_ECA_089-0.9930.pt')
     model = RCNN(len(w2n_vocab)+1, 512, 100, 1, True)
     model = model.to(device)
     model.load_state_dict(state_dict)

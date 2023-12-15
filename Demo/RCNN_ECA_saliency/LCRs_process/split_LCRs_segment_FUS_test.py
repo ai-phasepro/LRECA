@@ -283,7 +283,7 @@ if __name__== '__main__':
     # FUS_train_path='./RCNN_ECA_saliency/output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/FUS_family/FUS_train_statics.csv'
     # FUS_test_path='./RCNN_ECA_saliency/output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/FUS_family/FUS_test_statics.csv'
     # FUS_train_path='./RCNN_ECA_saliency/output/gradCAM/gradCAM_noSoftmax_outFinal_protein_score/FUS_family/FUS_train_statics.csv'
-    FUS_test_path='/results/output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/FUS_family/FUS_test_statics.csv'
+    FUS_test_path='./output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/FUS_family/FUS_test_statics.csv'
     # 注意FUS_train_path与savepath保持一致
 
     # train_proteins_scores_all = []
@@ -331,7 +331,7 @@ if __name__== '__main__':
     # segment_savepath = './RCNN_ECA_saliency/LCRs_process/density_segment/density_segment_train2/'
     # segment_savepath = './RCNN_ECA_saliency/LCRs_process/density_segment/density_segment_test2/'
     # segment_savepath = './RCNN_ECA_saliency/LCRs_process/density_segment/density_segment_train3/'
-    segment_savepath = '/results/output/LCRs_process/density_segment/density_segment_test/'
+    segment_savepath = './output/LCRs_process/density_segment/density_segment_test/'
 
     if not os.path.exists(segment_savepath + 'density_segment_picture'):
         os.makedirs(segment_savepath + 'density_segment_picture')
@@ -347,9 +347,9 @@ if __name__== '__main__':
     # save_segment(f'{segment_savepath}density_segment_statics.csv', max_segment_idx_list, max_protein_segment_list, train_proteins_names, protein_segments_list, log_density_segments_list, process_density_segments_list, score_list, area_list, index_list)
 
 
-    density_savepath = '/results/output/LCRs_process/density_map/LCRs_protein_densitymap_test'
-    if not os.path.exists('/results/output/LCRs_process/density_map/'):
-        os.makedirs('/results/output/LCRs_process/density_map/')
+    density_savepath = './output/LCRs_process/density_map/LCRs_protein_densitymap_test'
+    if not os.path.exists('./output/LCRs_process/density_map/'):
+        os.makedirs('./output/LCRs_process/density_map/')
     save_density(density_savepath +'.csv', train_proteins_names, train_proteins, train_scores, log_density_list)
 
     # picture_savepath = './RCNN_ECA_saliency/LCRs_process/density_map/score_density_picture/'
