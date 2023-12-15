@@ -1,6 +1,8 @@
 # LRECA
 
-Source codes and a demo for testing our LRECA model for discerning phase-separation potential of proteins directly from AA sequences. This demo also examines the explainability of the model by interpreting the predictions to determine the influence of individual AAs and their sequential patterns on biomolecular condensation regulation. Companion code to the paper "Discovery of phase separation protein with single amino acid attributions by unbiased deep-learning".
+The source codes and a demo are provided to evaluate our LRECA model's ability to discern the phase-separation potential of proteins directly from amino acid (AA) sequences. This demo further scrutinizes the model's explainability by interpreting its predictions, aiming to ascertain the impact of individual amino acids and their sequential patterns on biomolecular condensation regulation. The accompanying code is linked to the paper titled "Discovery of phase separation protein with single amino acid attributions by unbiased deep-learning".
+
+The source codes can be used to train and test the model with 10-fold cross validation on all datasets. However, it will take a lot of time to train the model if you do not have a good GPU. We also provide a demo that includes the trained models and corresponding testing data. The demo can run in a normal computer and will finish in about six minutes.
 
 ## Requirement
 
@@ -8,9 +10,16 @@ This code was implemented using the Pytorch framework (version 2.1.1). More deta
 
 ## Files
 
+Sources codes included three folders, the /RCNN_model, the /Data, and the /RCNN_ECA_saliency. All codes of the demo are included in the fold /Demo.
+
 The folder /RCNN_model contains four files, RCNN_ECA_3_LLPS.py, RCNN_ECA_3_R.py, RCNN_ECA_3_high.py, and RCNN_ECA_3_madata.py, which contain the code for training and testing the model using 10-fold cross validation on the datasets of LLPS and PDB, phaspDB_reviewed and PDB, phaspDB_highthroughput and PDB, and inhouse-dataset and PDB, respectively. 
 
+The folder /Data contains the negative data from the PDB database and the positive data from public databases and the in-house dataset (mydata).
+
 The folder /RCNN_ECA_saliency contains the files for computing the contribution of each AA and AA segment. Specifically, /RCNN_ECA_saliency /saliency_function /method /RCNN_ECA_saliency_gradCAM.py contain the code for obtained the contribution of each AA. /RCNN_ECA_saliency /saliency_function /RCNN_ECA_save_model contain the well trained model and corresponding parameters. The folder /RCNN_ECA_saliency /LCRs_process contain the code for identifying the main contributing AA segments in a protein for LLPS based on the results of the contributions of each AA.
+
+The folder /Demo contains five folds. /Demo/trained model contains four trained models for the four datasets. /Demo/test_dataset contains the testing data for the four datasets in the demo. /Demo/code_for_model_testing contains the codes for testing. /Demo/classification_output contains the testing results of the trained models on the testing datasets in the demo. /Demo/ saliency_model contains the trained model used for computing the contribution of each AA and AA segment.
+You can also visit our [website](http://www.ai-phasepro.pro/) for the whole datasets
 
 ## Model
 
@@ -24,27 +33,13 @@ __Figure 1. Architecture of the Length-variable Recurrent Efficient Channel Atte
 
 
 
-__Individual AA contribution analysis__
+## Individual AA contribution analysis
 
 Gradient-weighted Class Activation Mapping (Grad-CAM) was used to analysis the contribution of each AA or AA segment in a protein for LLPS, as shown in Figure 2.
 
  ![3](./README.assets/3.png) 
 
 **Figure 2. Schematic illustration of the Grad-CAM based model explainability method**. N: negative; P: positive.
-
-## Test_Dataset
-
-./processed_dataset contains processed data of three public datasets that are used in this paper, including LLPS, phaspDB_reviewed, phasepDB_highthroughput. 
-
-You can also visit our [website](http://www.ai-phasepro.pro/) for the whole datasets
-
-## Results
-
-The results of classification are stored in the folder ./results/classification, including protein score, acc, sen, spe and auc.
-
-The results of saliency are stored in the folder ./results/output.
-
-Installation guide for running Demo
 
 
 ## Run Demo
@@ -72,6 +67,8 @@ python test/test/RCNN_ECA_3_LLPS_test.py
 python test/test/RCNN_ECA_3_high_test.py 
 python test/test/RCNN_ECA_3_R_test.py 
 ```
+### Classification Results
+The results of classification are stored in the folder ./Demo/classification_output, including protein score, accuracy, sensitivity, specificity and area under the ROC curve (AUC) for the four datasets.
 
 ### Saliency
 
@@ -96,6 +93,8 @@ python RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_FUS_test.py
 python RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics2_FUS_train.py 
 python RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_FUS_train.py 
 ```
+__Saliency results__
+The results of saliency are stored in the folder ./results/output.
 
 ## License
 
