@@ -1,6 +1,6 @@
 # LRECA
 
-A demo for testing our LRECA model for discerning phase-separation potential of proteins directly from AA sequences. This demo also examines the explainability of the model by interpreting the predictions to determine the influence of individual AAs and their sequential patterns on biomolecular condensation regulation. Companion code to the paper "Discovery of phase separation protein with single amino acid attributions by unbiased deep-learning".
+Source codes and a demo for testing our LRECA model for discerning phase-separation potential of proteins directly from AA sequences. This demo also examines the explainability of the model by interpreting the predictions to determine the influence of individual AAs and their sequential patterns on biomolecular condensation regulation. Companion code to the paper "Discovery of phase separation protein with single amino acid attributions by unbiased deep-learning".
 
 ## Requirement
 
