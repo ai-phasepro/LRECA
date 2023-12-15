@@ -4,7 +4,7 @@ Source codes and a demo for testing our LRECA model for discerning phase-separat
 
 ## Requirement
 
-This code was implemented using the Pytorch framework (version 1.12.1). More details have been described in the file “requirements.txt”. 
+This code was implemented using the Pytorch framework (version 2.1.1). More details have been described in the file “requirements.txt”. 
 
 ## Files
 
