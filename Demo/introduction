@@ -1,1 +1,9 @@
-aaa
+This demo included four trained models and corresponding testing data from the four datasets to evaluate the classification performacne of our method. 
+In addition, this demo also included a trained model for computing the saliency for individual AAs and AAs segments.
+
+The folder /Demo contains five folds. /Demo/trained model contains four trained models for the four datasets. 
+/Demo/test_dataset contains the testing data for the four datasets in the demo. 
+/Demo/code_for_model_testing contains the codes for testing. 
+/Demo/classification_output contains the testing results of the trained models on the testing datasets in the demo. 
+/Demo/ saliency_model contains the trained model used for computing the contribution of each AA and AA segment.
+
