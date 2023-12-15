@@ -47,7 +47,7 @@ The results of saliency are stored in the folder ./results/output.
 Installation guide for running Demo
 
 
-## Run Code
+## Run Demo
 
 ### Install Requirement
 
