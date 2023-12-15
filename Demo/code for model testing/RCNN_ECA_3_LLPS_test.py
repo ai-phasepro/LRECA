@@ -253,28 +253,17 @@ class RCNN(nn.Module):
             self.bi_num = 1
         self.biFlag = biFlag
         self.device = torch.device("cuda")
-        # alpha = torch.FloatTensor([alpha])
-        # self.alpha = nn.Parameter(alpha)
         self.ECABlock= ECALayer()
-        # self.CABlock = ChannelAttention()
-        # self.SABlock = SpatialAttention()
-        # self.SEBlock = SEBlock(self.bi_num*hidden_dim + embedding_num)
-        self.embedding = nn.Embedding(vocab_size, embedding_num, padding_idx=0)   # 需要添加padding_idx
+        self.embedding = nn.Embedding(vocab_size, embedding_num, padding_idx=0)
         self.lstm = nn.LSTM(input_size= embedding_num, hidden_size=hidden_dim, num_layers=num_layers, batch_first=True, bidirectional=biFlag)
         self.globalmaxpool = nn.AdaptiveMaxPool1d(1)
-        # self.globalavgpool = nn.AdaptiveAvgPool1d(1)
         self.linear = nn.Sequential(
             nn.Dropout(dropout),
 
             nn.Linear(self.bi_num*hidden_dim + embedding_num, 128),
-            # nn.Linear(self.bi_num*hidden_dim + embedding_num, 256),
-            # nn.Linear(2 * (self.bi_num*hidden_dim + embedding_num), 128),
             nn.ReLU(),
             nn.Dropout(dropout),
-            # nn.Linear(256,32),  # 32
             nn.Linear(128,2)
-            # nn.ReLU(),
-            # nn.Linear(32,2)  # 32
         )
         
     def forward(self, x, length):
@@ -286,19 +275,8 @@ class RCNN(nn.Module):
         out = F.relu(out)
         out = out.permute(0, 2, 1)
         
-        # out1 = self.SEBlock(out, length)
-        
         out1 = self.ECABlock(out, length)
         out = out + out1
-  
-        # out1 = self.CABlock(out, length)
-        # out1 = self.SABlock(out1)
-        # out = out + out1  # 残差结构
-        
-        # out = out * self.alpha+ out1  # 残差结构
-        
-        # out = self.SEBlock(out, length)
-        # out = self.ECABlock(out, length)
         
         out = self.globalmaxpool(out).squeeze()
         out = F.relu(out)
@@ -307,8 +285,8 @@ class RCNN(nn.Module):
 
 
 def set_seed(seed):
-    torch.manual_seed(seed)            # 为CPU设置随机种子
-    torch.cuda.manual_seed(seed)       # 为当前GPU设置随机种子
+    torch.manual_seed(seed)           
+    torch.cuda.manual_seed(seed)      
     np.random.seed(seed)
     
     torch.backends.cudnn.deterministic = True
@@ -336,9 +314,9 @@ if __name__== '__main__':
     device = torch.device("cuda")
     seed = 1
     set_seed(seed)
-    root_dir = '/data'
-    pos_protein_dir = 'processed_dataset/pos_dataset/pos_word_list_LLPS.txt'
-    neg_protein_dir = 'processed_dataset/neg_dataset/neg_word_list.txt'
+    root_dir = '../Data'
+    pos_protein_dir = 'pos_dataset/pos_word_list_LLPS.txt'
+    neg_protein_dir = 'neg_dataset/neg_word_list.txt'
     pos_test_dir = 'test_dataset/pos_dataset/pos_word_list_LLPS_test.txt'
     neg_test_dir = 'test_dataset/neg_dataset/neg_word_list_LLPS_test.txt'
     save_dir = './save_model_LLPS'
@@ -358,10 +336,10 @@ if __name__== '__main__':
         pos_sequence, neg_sequence = readdata(root_dir, pos_protein_dir, neg_protein_dir, list_length, pos_seed, neg_seed)
 
 
-        if not os.path.exists("/results/classification_output/dataset_RCNN_ECA_output/LLPS_output/r3/RCNN_em2048_128_output"):
-            os.makedirs("/results/classification_output/dataset_RCNN_ECA_output/LLPS_output/r3/RCNN_em2048_128_output")
-        auc_save_csv = '/results/classification_output/dataset_RCNN_ECA_output/LLPS_output/r3/RCNN_em2048_128_output/rcnn_ECA_LLPS_epoch100_roc_{}.csv'.format((i+10))
-        result_save_csv = '/results/classification_output/dataset_RCNN_ECA_output/LLPS_output/r3/RCNN_em2048_128_output/result.csv'
+        if not os.path.exists("./classification_output/dataset_RCNN_ECA_output/LLPS_output/r3/RCNN_em2048_128_output"):
+            os.makedirs("./classification_output/dataset_RCNN_ECA_output/LLPS_output/r3/RCNN_em2048_128_output")
+        auc_save_csv = './classification_output/dataset_RCNN_ECA_output/LLPS_output/r3/RCNN_em2048_128_output/rcnn_ECA_LLPS_epoch100_roc_{}.csv'.format((i+10))
+        result_save_csv = './classification_output/dataset_RCNN_ECA_output/LLPS_output/r3/RCNN_em2048_128_output/result.csv'
         df_test = pd.DataFrame(columns=['y_true', 'y_score'])
         df_test.to_csv(auc_save_csv, index=False)    # rcnn_2使用全部数据， rcnn_1使用±668数据
         df_test = pd.DataFrame(columns=['acc', 'sen', 'spe', 'auc'])

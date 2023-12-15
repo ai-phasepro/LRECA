@@ -280,7 +280,7 @@ def save_segment(savepath, max_segment_idx_list, max_protein_segment_list, prote
             
 
 if __name__== '__main__':
-    FUS_test_path='/results/output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/mydata/mydata_test_statics.csv'
+    FUS_test_path='./output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/mydata/mydata_test_statics.csv'
 
     train_proteins_scores_all = []
     with open(FUS_test_path, 'r') as f:
@@ -312,7 +312,7 @@ if __name__== '__main__':
         log_density_list.append(log_density)
         density_list.append(np.exp(log_density))
 
-    segment_savepath = '/results/output/LCRs_process/density_segment/density_segment_mydata/'
+    segment_savepath = './output/LCRs_process/density_segment/density_segment_mydata/'
 
     if not os.path.exists(segment_savepath + 'density_segment_picture'):
         os.makedirs(segment_savepath + 'density_segment_picture')
@@ -322,9 +322,9 @@ if __name__== '__main__':
     
     save_segment(f'{segment_savepath}true_density_segment_statics.csv', max_segment_idx_list, max_protein_segment_list, train_proteins_names, protein_segments_list, density_segments_list, process_density_segments_list, score_list, area_list, index_list)
 
-    density_savepath = '/results/output/LCRs_process/density_map/LCRs_protein_densitymap_mydata'
-    if not os.path.exists('/results/output/LCRs_process/density_map/'):
-        os.makedirs('/results/output/LCRs_process/density_map/')
+    density_savepath = './output/LCRs_process/density_map/LCRs_protein_densitymap_mydata'
+    if not os.path.exists('./output/LCRs_process/density_map/'):
+        os.makedirs('./output/LCRs_process/density_map/')
     save_density(density_savepath +'.csv', train_proteins_names, train_proteins, train_scores, log_density_list)
 
     print("ALL success")

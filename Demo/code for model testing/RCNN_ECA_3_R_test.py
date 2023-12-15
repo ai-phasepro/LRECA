@@ -91,16 +91,8 @@ def word2Num(train, test, min=0, max=None, max_features=None):
         for word in list:
             num2.append(dic.get(word))
         Num2.append(num2)
-    print(len(Num2))
-    # a1, a2 = [], []
-    # for list in train:
-    #     list = list.replace(' ', '')
-    #     a1.append(len(list))
-    # for num in Num:
-    #     a2.append(len(num))
-    # print(a1 == a2)    
+    print(len(Num2))  
     return Num, Num2, dic        
- 
 
 
 
@@ -326,14 +318,14 @@ if __name__== '__main__':
     device = torch.device("cuda")
     seed = 1
     set_seed(seed)
-    root_dir =  '/data'
-    pos_protein_dir = 'processed_dataset/pos_dataset/pos_word_list_PhasepDB_Reviewed.txt'
-    neg_protein_dir = 'processed_dataset/neg_dataset/neg_word_list.txt'
+    root_dir =  '../Data'
+    pos_protein_dir = 'pos_dataset/pos_word_list_PhasepDB_Reviewed.txt'
+    neg_protein_dir = 'neg_dataset/neg_word_list.txt'
     pos_test_dir = 'test_dataset/pos_dataset/pos_word_list_R_test.txt'
     neg_test_dir = 'test_dataset/neg_dataset/neg_word_list_R_test.txt'
     save_dir = './save_model_R'
     save_path = os.path.join(root_dir, save_dir)
-    model_path = '/data/test_model/model_R_3.pt'
+    model_path = 'trained_model/model_R_3.pt'
     list_length = 592 # pos:253, 592, 4644, 668, neg:1490
     
     # PhasepDB_Reviewed seed
@@ -346,10 +338,10 @@ if __name__== '__main__':
         pos_test_sequence,neg_test_sequence = readdata_test(root_dir, pos_test_dir, neg_test_dir)
         pos_sequence, neg_sequence = readdata(root_dir, pos_protein_dir, neg_protein_dir, list_length, pos_seed, neg_seed)
 
-        if not os.path.exists("/results/classification_output/dataset_RCNN_ECA_output/PhasepDB_Reviewed_output/RCNN_ECA_em1024_128_32_output"):
-            os.makedirs("/results/classification_output/dataset_RCNN_ECA_output/PhasepDB_Reviewed_output/RCNN_ECA_em1024_128_32_output")
-        auc_save_csv = '/results/classification_output/dataset_RCNN_ECA_output/PhasepDB_Reviewed_output/RCNN_ECA_em1024_128_32_output/rcnn_ECA_PDB_R_epoch100_roc_{}.csv'.format((i+1))
-        result_save_csv = '/results/classification_output/dataset_RCNN_ECA_output/PhasepDB_Reviewed_output/RCNN_ECA_em1024_128_32_output/result.csv'
+        if not os.path.exists("./classification_output/dataset_RCNN_ECA_output/PhasepDB_Reviewed_output/RCNN_ECA_em1024_128_32_output"):
+            os.makedirs("./classification_output/dataset_RCNN_ECA_output/PhasepDB_Reviewed_output/RCNN_ECA_em1024_128_32_output")
+        auc_save_csv = './classification_output/dataset_RCNN_ECA_output/PhasepDB_Reviewed_output/RCNN_ECA_em1024_128_32_output/rcnn_ECA_PDB_R_epoch100_roc_{}.csv'.format((i+1))
+        result_save_csv = './classification_output/dataset_RCNN_ECA_output/PhasepDB_Reviewed_output/RCNN_ECA_em1024_128_32_output/result.csv'
         df_test = pd.DataFrame(columns=['y_true', 'y_score'])
         df_test.to_csv(auc_save_csv, index=False)    # rcnn_2使用全部数据， rcnn_1使用±668数据
         df_test = pd.DataFrame(columns=['acc', 'sen', 'spe', 'auc'])
