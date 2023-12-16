@@ -6,13 +6,11 @@ import numpy as np
 import torch.nn.functional as F
 from torch import LongTensor, Tensor, from_numpy, max_pool1d, nn, unsqueeze,optim
 import argparse
-#from torchnlp.encoders.texts import StaticTokenizerEncoder
 from sklearn.model_selection import StratifiedKFold
 from sklearn import metrics
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import pandas as pd
 import copy
-# from torchsummaryX import summary
 import random
 
 def readdata(root_dir, pos_protein_dir, neg_protein_dir, length, pos_seed, neg_seed):
@@ -24,12 +22,12 @@ def readdata(root_dir, pos_protein_dir, neg_protein_dir, length, pos_seed, neg_s
     with open(neg_protein_path, 'r') as f:
         neg_word_list = f.read().splitlines()
     f.close
-    neg_word_list = neg_word_list[:length]  # #表示使用全部数据
-    pos_word_list = pos_word_list[:length]  # #表示使用全部数据
+    neg_word_list = neg_word_list[:length]  
+    pos_word_list = pos_word_list[:length]  
 
-    np.random.seed(pos_seed)  #0/3/7/8/14/20/27/29/34/39
+    np.random.seed(pos_seed)  
     np.random.shuffle(pos_word_list)  
-    np.random.seed(neg_seed)  #1/4/8/9/15/21/28/30/35/40
+    np.random.seed(neg_seed)  
     np.random.shuffle(neg_word_list)
     pos_sequence = pos_word_list
     neg_sequence = neg_word_list
@@ -94,7 +92,6 @@ def word2Num(train, test, min=0, max=None, max_features=None):
         Num2.append(num2)
     print(len(Num2))  
     return Num, Num2, dic        
-
 
 
 def collate_fn(data):    
@@ -176,7 +173,6 @@ class SEBlock(nn.Module):
                 y = x_avg.clone()
             else:
                 y = torch.cat((y, x_avg), dim=0)
-        
         # Excitation
         y = self.fc(y.squeeze()).view(b, e, 1)
         # Fscale
@@ -204,14 +200,12 @@ class ChannelAttention(nn.Module):
                 y_avg = x_avg.clone()
             else:
                 y_avg = torch.cat((y_avg, x_avg), dim=0)
-        # y = self.avg_pool(x).view(b,e,1)
         
         y_max = self.max_pool(x)
         
         avg_out = self.conv(y_avg.transpose(-1, -2)).transpose(-1, -2)
         max_out = self.conv(y_max.transpose(-1, -2)).transpose(-1, -2)
 
-        # Multi-scale information fusion
         out = self.sigmoid(avg_out + max_out)
 
         return x * out.expand_as(x)
@@ -260,9 +254,10 @@ class RCNN(nn.Module):
             nn.Linear(self.bi_num*hidden_dim + embedding_num, 128),
             nn.ReLU(),
             nn.Dropout(dropout),
-            nn.Linear(128,32),  # 32
+            nn.Linear(128,32),  
+            nn.Linear(128,32),  
             nn.ReLU(),
-            nn.Linear(32,2)  # 32
+            nn.Linear(32,2) 
         )
         
     def forward(self, x, length):
@@ -276,15 +271,6 @@ class RCNN(nn.Module):
         
         out1 = self.ECABlock(out, length)
         out = out + out1
-  
-        # out1 = self.CABlock(out, length)
-        # out1 = self.SABlock(out1)
-        # out = out + out1  # 残差结构
-        
-        # out = out * self.alpha+ out1  # 残差结构
-        
-        # out = self.SEBlock(out, length)
-        # out = self.ECABlock(out, length)
         
         out = self.globalmaxpool(out).squeeze()
         out = F.relu(out)
@@ -293,8 +279,8 @@ class RCNN(nn.Module):
 
 
 def set_seed(seed):
-    torch.manual_seed(seed)            # 为CPU设置随机种子
-    torch.cuda.manual_seed(seed)       # 为当前GPU设置随机种子
+    torch.manual_seed(seed)           
+    torch.cuda.manual_seed(seed)      
     np.random.seed(seed)
     
     torch.backends.cudnn.deterministic = True
@@ -315,9 +301,6 @@ if __name__== '__main__':
     model_path = 'trained_model/model_mydata_1.pt'
     list_length = 1479 # pos:253, 592, 4644, 668, 1507 neg:1490, 1479
 
-    # mydata_all_1507
-    pos_seed_list = random.sample(range(1, 1000), 10)
-    neg_seed_list = random.sample(range(1, 1000), 10)
     pos_seed_list = [20]
     neg_seed_list = [21]
     
@@ -333,21 +316,21 @@ if __name__== '__main__':
         auc_save_csv = './classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output/rcnn_ECA_mydata_test_roc_{}.csv'.format((i+10))
         result_save_csv = './classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output/result.csv'
         df_test = pd.DataFrame(columns=['y_true', 'y_score'])
-        df_test.to_csv(auc_save_csv, mode='w', index=False)    # rcnn_2使用全部数据， rcnn_1使用±668数据
+        df_test.to_csv(auc_save_csv, mode='w', index=False)   
         df_test = pd.DataFrame(columns=['acc', 'sen', 'spe', 'auc'])
         df_test.to_csv(result_save_csv, index=False)
 
         neg_num = len(neg_test_sequence)
         pos_num = len(pos_test_sequence)
-        print('pos_num=',pos_num)  # 253,592,1490,668,1507
-        print('neg_num=',neg_num)  # 253,592,1490,668,1479
+        print('pos_num=',pos_num) 
+        print('neg_num=',neg_num) 
         
         neg_num = len(neg_sequence)
         pos_num = len(pos_sequence)
 
         start = 0
         interval = 0.1
-        val_split = 0.1 #验证集占训练集比例
+        val_split = 0.1
         
         total_tp = 0
         total_p = 0
@@ -368,8 +351,8 @@ if __name__== '__main__':
         
         train_val_pos_seq = pos_sequence[:int(pos_num*start)] + pos_sequence[int(pos_num*(start+interval)):]
         train_val_neg_seq = neg_sequence[:int(neg_num * start)] + neg_sequence[int(neg_num * (start + interval)):]
-        train_val_pos_num = len(train_val_pos_seq)  # 602
-        train_val_neg_num = len(train_val_neg_seq)  # 602 
+        train_val_pos_num = len(train_val_pos_seq) 
+        train_val_neg_num = len(train_val_neg_seq) 
         np.random.shuffle(train_val_pos_seq)
         np.random.shuffle(train_val_neg_seq)
         val_pos_seq = train_val_pos_seq[:int(train_val_pos_num*val_split)]
@@ -377,13 +360,11 @@ if __name__== '__main__':
         val_neg_seq = train_val_neg_seq[:int(train_val_neg_num*val_split)]
         train_neg_seq = train_val_neg_seq[int(train_val_neg_num*val_split):]
 
-        # writedata(root_dir, pos_test_dir, neg_test_dir, test_pos_seq, test_neg_seq)
-
         test_y = np.hstack((np.zeros(shape=(len(test_neg_seq), )),
-                        np.ones(shape=(len(test_pos_seq), ))))  # 66*2
+                        np.ones(shape=(len(test_pos_seq), )))) 
 
-        print('test_pos', test_y[test_y == 1].shape)     # 66 
-        print('test_neg', test_y[test_y == 0].shape)     # 66
+        print('test_pos', test_y[test_y == 1].shape)     
+        print('test_neg', test_y[test_y == 0].shape)     
 
         train_seq = train_neg_seq + train_pos_seq
         val_seq = val_neg_seq + val_pos_seq
@@ -402,14 +383,13 @@ if __name__== '__main__':
         test_label_ten = test_label_ten.type(torch.LongTensor)
             
         state_dict = torch.load(model_path)
-        rcnn = RCNN(len(vocab)+1, 1024, 100, 1, True)  # 256,100,1  hidden128:256,128,1效果较差
+        rcnn = RCNN(len(vocab)+1, 1024, 100, 1, True) 
         rcnn = rcnn.to(device)
         rcnn.load_state_dict(state_dict)
         rcnn.eval()
         print(rcnn)
             
         test = Mydata(test_ten, test_label_ten)
-            
 
         set_seed(seed)
         test_dataloader = dataloader.DataLoader(dataset=test, batch_size=32,shuffle=True, collate_fn=collate_fn)

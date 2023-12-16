@@ -6,13 +6,11 @@ import numpy as np
 import torch.nn.functional as F
 from torch import LongTensor, Tensor, from_numpy, max_pool1d, nn, unsqueeze,optim
 import argparse
-#from torchnlp.encoders.texts import StaticTokenizerEncoder
 from sklearn.model_selection import StratifiedKFold
 from sklearn import metrics
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import pandas as pd
 import copy
-# from torchsummaryX import summary
 
 def readdata(root_dir, pos_protein_dir, neg_protein_dir, length, pos_seed, neg_seed):
     pos_protein_path = os.path.join(root_dir, pos_protein_dir)
@@ -23,12 +21,12 @@ def readdata(root_dir, pos_protein_dir, neg_protein_dir, length, pos_seed, neg_s
     with open(neg_protein_path, 'r') as f:
         neg_word_list = f.read().splitlines()
     f.close
-    neg_word_list = neg_word_list[:length]  # #表示使用全部数据
-    pos_word_list = pos_word_list[:length]  # #表示使用全部数据
+    neg_word_list = neg_word_list[:length]  
+    pos_word_list = pos_word_list[:length] 
 
-    np.random.seed(pos_seed)  #0/3/7/8/14/20/27/29/34/39
+    np.random.seed(pos_seed) 
     np.random.shuffle(pos_word_list)  
-    np.random.seed(neg_seed)  #1/4/8/9/15/21/28/30/35/40
+    np.random.seed(neg_seed) 
     np.random.shuffle(neg_word_list)
     pos_sequence = pos_word_list
     neg_sequence = neg_word_list
@@ -93,8 +91,6 @@ def word2Num(train, test, min=0, max=None, max_features=None):
         Num2.append(num2)
     print(len(Num2))
     return Num, Num2, dic        
- 
-
 
 
 def collate_fn(data):    
@@ -129,7 +125,7 @@ class ECALayer(nn.Module):
         channel: Number of channels of the input feature map
         k_size: Adaptive selection of kernel size
     """
-    def __init__(self, k_size=3): # 默认最好是5，测试7效果如何
+    def __init__(self, k_size=3): 
         super(ECALayer, self).__init__()
         self.avg_pool = nn.AdaptiveAvgPool1d(1)
         self.conv = nn.Conv1d(1, 1, kernel_size=k_size, padding=(k_size - 1) // 2, bias=False)
@@ -146,7 +142,6 @@ class ECALayer(nn.Module):
                 y = x_avg.clone()
             else:
                 y = torch.cat((y, x_avg), dim=0)
-        # y = self.avg_pool(x).view(b,e,1)
 
         # Two different branches of ECA module
         y = self.conv(y.transpose(-1, -2)).transpose(-1, -2)
@@ -170,8 +165,6 @@ class SEBlock(nn.Module):
 
     def forward(self, x, length):
         b, e , t = x.size()
-        # Squeeze
-        # y = self.avg_pool(x).view(b, e)
         for i in range(b):
             x_pack = x[i][: , : length[i]].unsqueeze(0)
             x_avg = self.avg_pool(x_pack)
@@ -207,7 +200,6 @@ class ChannelAttention(nn.Module):
                 y_avg = x_avg.clone()
             else:
                 y_avg = torch.cat((y_avg, x_avg), dim=0)
-        # y = self.avg_pool(x).view(b,e,1)
         
         y_max = self.max_pool(x)
         
@@ -324,39 +316,35 @@ if __name__== '__main__':
     model_path = '/data/test_model/model_LLPS_10.pt'
     list_length = 253 # pos:253, 592, 4644, 668, neg:1490
 
-    # LLPS seed
     pos_seed_list = [5]           
     neg_seed_list = [6]
 
-    # 十次实验
     for i in range(len(pos_seed_list)):
         pos_seed = pos_seed_list[i]
         neg_seed = neg_seed_list[i]
         pos_test_sequence,neg_test_sequence = readdata_test(root_dir, pos_test_dir, neg_test_dir)
         pos_sequence, neg_sequence = readdata(root_dir, pos_protein_dir, neg_protein_dir, list_length, pos_seed, neg_seed)
 
-
         if not os.path.exists("./classification_output/dataset_RCNN_ECA_output/LLPS_output/r3/RCNN_em2048_128_output"):
             os.makedirs("./classification_output/dataset_RCNN_ECA_output/LLPS_output/r3/RCNN_em2048_128_output")
         auc_save_csv = './classification_output/dataset_RCNN_ECA_output/LLPS_output/r3/RCNN_em2048_128_output/rcnn_ECA_LLPS_epoch100_roc_{}.csv'.format((i+10))
         result_save_csv = './classification_output/dataset_RCNN_ECA_output/LLPS_output/r3/RCNN_em2048_128_output/result.csv'
         df_test = pd.DataFrame(columns=['y_true', 'y_score'])
-        df_test.to_csv(auc_save_csv, index=False)    # rcnn_2使用全部数据， rcnn_1使用±668数据
+        df_test.to_csv(auc_save_csv, index=False)   
         df_test = pd.DataFrame(columns=['acc', 'sen', 'spe', 'auc'])
         df_test.to_csv(result_save_csv, index=False)
-        
-        #x,y = readdata(root_dir, pos_protein_dir, neg_protein_dir)
+
         neg_num = len(neg_test_sequence)
         pos_num = len(pos_test_sequence)
-        print('pos_num=',pos_num)  # 253,592,1490,668,1507
-        print('neg_num=',neg_num)  # 253,592,1490,668,1479
+        print('pos_num=',pos_num)  
+        print('neg_num=',neg_num)  
         
         neg_num = len(neg_sequence)
         pos_num = len(pos_sequence)
 
         start = 0.9
         interval = 0.1
-        val_split = 0.1 #验证集占训练集比例
+        val_split = 0.1
         
         total_tp = 0
         total_p = 0
@@ -370,15 +358,14 @@ if __name__== '__main__':
         fold = 0
         total_correct, total_F1, total_R, total_precision = [],[],[],[]
 
-
         test_pos_seq = pos_test_sequence
         test_neg_seq = neg_test_sequence
         test_pos_seq, test_neg_seq = readdata_test(root_dir, pos_test_dir, neg_test_dir)
         
         train_val_pos_seq = pos_sequence[:int(pos_num * start)]
         train_val_neg_seq = neg_sequence[:int(neg_num * start)]
-        train_val_pos_num = len(train_val_pos_seq)  # 602
-        train_val_neg_num = len(train_val_neg_seq)  # 602 
+        train_val_pos_num = len(train_val_pos_seq)  
+        train_val_neg_num = len(train_val_neg_seq)  
         
         set_seed(seed)
         np.random.shuffle(train_val_pos_seq)
@@ -388,13 +375,11 @@ if __name__== '__main__':
         val_neg_seq = train_val_neg_seq[:int(train_val_neg_num*val_split)]
         train_neg_seq = train_val_neg_seq[int(train_val_neg_num*val_split):]
 
-        # writedata(root_dir, pos_test_dir, neg_test_dir, test_pos_seq, test_neg_seq)
-
         test_y = np.hstack((np.zeros(shape=(len(test_neg_seq), )),
-                        np.ones(shape=(len(test_pos_seq), ))))  # 66*2
+                        np.ones(shape=(len(test_pos_seq), ))))  
 
-        print('test_pos', test_y[test_y == 1].shape)     # 66 
-        print('test_neg', test_y[test_y == 0].shape)     # 66
+        print('test_pos', test_y[test_y == 1].shape)    
+        print('test_neg', test_y[test_y == 0].shape)    
 
         train_seq = train_neg_seq + train_pos_seq
         val_seq = val_neg_seq + val_pos_seq
@@ -404,7 +389,6 @@ if __name__== '__main__':
         _, test_num, vocab  = word2Num(train_seq, test_seq)
         test_data_size = len(test_num)
             
-            
         test_ten = []
         for list in test_num:
             test_ten.append(torch.LongTensor(list))
@@ -413,14 +397,13 @@ if __name__== '__main__':
         test_label_ten = test_label_ten.type(torch.LongTensor)
             
         state_dict = torch.load(model_path)
-        rcnn = RCNN(len(vocab)+1, 2048, 100, 1, True)  # 256,100,1  hidden128:256,128,1效果较差
+        rcnn = RCNN(len(vocab)+1, 2048, 100, 1, True) 
         rcnn = rcnn.to(device)
         rcnn.load_state_dict(state_dict)
         rcnn.eval()
         print(rcnn)
             
         test = Mydata(test_ten, test_label_ten)
-            
 
         set_seed(seed)
         test_dataloader = dataloader.DataLoader(dataset=test, batch_size=32,shuffle=True, collate_fn=collate_fn)
