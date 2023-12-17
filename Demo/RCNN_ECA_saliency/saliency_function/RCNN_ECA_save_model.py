@@ -6,13 +6,11 @@ import numpy as np
 import torch.nn.functional as F
 from torch import LongTensor, Tensor, from_numpy, max_pool1d, nn, unsqueeze,optim
 import argparse
-#from torchnlp.encoders.texts import StaticTokenizerEncoder
 from sklearn.model_selection import StratifiedKFold
 from sklearn import metrics
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import pandas as pd
 import copy
-# from torchsummaryX import summary
 
 def readdata(root_dir, pos_protein_dir, neg_protein_dir,  pos_seed, neg_seed):
     pos_protein_path = os.path.join(root_dir, pos_protein_dir)
@@ -23,12 +21,10 @@ def readdata(root_dir, pos_protein_dir, neg_protein_dir,  pos_seed, neg_seed):
     with open(neg_protein_path, 'r') as f:
         neg_word_list = f.read().splitlines()
     f.close
-    # neg_word_list = neg_word_list[:length]  # #表示使用全部数据
-    # pos_word_list = pos_word_list[:length]  # #表示使用全部数据
 
-    np.random.seed(pos_seed)  #0/3/7/8/14/20/27/29/34/39
+    np.random.seed(pos_seed)  
     np.random.shuffle(pos_word_list)  
-    np.random.seed(neg_seed)  #1/4/8/9/15/21/28/30/35/40
+    np.random.seed(neg_seed)  
     np.random.shuffle(neg_word_list)
     pos_sequence = pos_word_list
     neg_sequence = neg_word_list
@@ -37,7 +33,6 @@ def readdata(root_dir, pos_protein_dir, neg_protein_dir,  pos_seed, neg_seed):
     sequence = pos_sequence + neg_sequence
     label = np.hstack((pos_label, neg_label))
     return sequence, label
-    # return pos_sequence, neg_sequence
     
 def word2Num(train, test, min=0, max=None, max_features=None):
     dic = {}
@@ -71,17 +66,8 @@ def word2Num(train, test, min=0, max=None, max_features=None):
         for word in list:
             num2.append(dic.get(word))
         Num2.append(num2)
-    print(len(Num2))
-    # a1, a2 = [], []
-    # for list in train:
-    #     list = list.replace(' ', '')
-    #     a1.append(len(list))
-    # for num in Num:
-    #     a2.append(len(num))
-    # print(a1 == a2)    
+    print(len(Num2))  
     return Num, Num2, dic        
- 
-
 
 
 def collate_fn(data):    
@@ -133,7 +119,6 @@ class ECALayer(nn.Module):
                 y = x_avg.clone()
             else:
                 y = torch.cat((y, x_avg), dim=0)
-        # y = self.avg_pool(x).view(b,e,1)
 
         # Two different branches of ECA module
         y = self.conv(y.transpose(-1, -2)).transpose(-1, -2)
@@ -154,7 +139,7 @@ class SEBlock(nn.Module):
             nn.Linear(channel//r, channel, bias=False),
             nn.Sigmoid(),
         )
-
+        
     def forward(self, x, length):
         b, e , t = x.size()
         # Squeeze
@@ -166,7 +151,6 @@ class SEBlock(nn.Module):
                 y = x_avg.clone()
             else:
                 y = torch.cat((y, x_avg), dim=0)
-        
         # Excitation
         y = self.fc(y.squeeze()).view(b, e, 1)
         # Fscale
@@ -194,7 +178,6 @@ class ChannelAttention(nn.Module):
                 y_avg = x_avg.clone()
             else:
                 y_avg = torch.cat((y_avg, x_avg), dim=0)
-        # y = self.avg_pool(x).view(b,e,1)
         
         y_max = self.max_pool(x)
         
@@ -240,28 +223,19 @@ class RCNN(nn.Module):
             self.bi_num = 1
         self.biFlag = biFlag
         self.device = torch.device("cuda")
-        # alpha = torch.FloatTensor([alpha])
-        # self.alpha = nn.Parameter(alpha)
         self.ECABlock= ECALayer()
-        # self.CABlock = ChannelAttention()
-        # self.SABlock = SpatialAttention()
-        # self.SEBlock = SEBlock(self.bi_num*hidden_dim + embedding_num)
-        self.embedding = nn.Embedding(vocab_size, embedding_num, padding_idx=0)   # 需要添加padding_idx
+        self.embedding = nn.Embedding(vocab_size, embedding_num, padding_idx=0)   
         self.lstm = nn.LSTM(input_size= embedding_num, hidden_size=hidden_dim, num_layers=num_layers, batch_first=True, bidirectional=biFlag)
         self.globalmaxpool = nn.AdaptiveMaxPool1d(1)
-        # self.globalavgpool = nn.AdaptiveAvgPool1d(1)
         self.linear = nn.Sequential(
             nn.Dropout(dropout),
 
             nn.Linear(self.bi_num*hidden_dim + embedding_num, 128),
-            # nn.Linear(self.bi_num*hidden_dim + embedding_num, 256),
-            # nn.Linear(2 * (self.bi_num*hidden_dim + embedding_num), 128),
             nn.ReLU(),
             nn.Dropout(dropout),
-            nn.Linear(128,32),  # 32
-            # nn.Linear(256,2)
+            nn.Linear(128,32), 
             nn.ReLU(),
-            nn.Linear(32,2)  # 32
+            nn.Linear(32,2)
         )
         
     def forward(self, x, length):
@@ -283,8 +257,8 @@ class RCNN(nn.Module):
 
 
 def set_seed(seed):
-    torch.manual_seed(seed)           
-    torch.cuda.manual_seed(seed)     
+    torch.manual_seed(seed)          
+    torch.cuda.manual_seed(seed)      
     np.random.seed(seed)
     
     torch.backends.cudnn.deterministic = True
@@ -296,34 +270,26 @@ if __name__== '__main__':
     seed = 1
     set_seed(seed)
     root_dir = '.'
-    pos_protein_dir = '../Data/pos_word_list_mydata_all_1507.txt'
-    # neg_protein_dir = 'neg_word_list.txt'
-    neg_protein_dir = '../Data/neg_word_list_1479.txt'
-    save_dir = './saliency_model'
+    pos_protein_dir = '../Data/pos_dataset/pos_word_list_mydata_all_1507.txt'
+    neg_protein_dir = '../Data/neg_dataset/neg_word_list_1479.txt'
+    save_dir = 'saliency_model'
     save_path = os.path.join(root_dir, save_dir)
     
     if not os.path.exists(save_path):
         os.makedirs(save_path)
-    # list_length = 1479 # pos:253, 592, 4644, 668, 1507 neg:1490, 1479
-         
-    # mydata_all_1507
-    
+
     pos_seed = 0
     neg_seed = 1
     train_seq,train_label = readdata(root_dir, pos_protein_dir, neg_protein_dir, pos_seed, neg_seed)
-    
-  
+
     print(len(train_seq))
     print(len(train_label))
-    # print('pos_num=',pos_num)  # 253,592,1490,668,1507
-    # print('neg_num=',neg_num)  # 253,592,1490,668,1479
 
     test_seq, test_label = train_seq.copy(), train_label.copy()
     train_num, test_num, vocab  = word2Num(train_seq, test_seq)
     train_data_size = len(train_num)
     test_data_size = len(test_num)
-   
-    
+
     train_ten = []
     for list in train_num:
         train_ten.append(torch.LongTensor(list))
@@ -331,8 +297,7 @@ if __name__== '__main__':
     train_label_ten = from_numpy(train_label)
     train_label_ten = train_label_ten.type(torch.LongTensor)
     
-    rcnn = RCNN(len(vocab)+1, 512, 100, 1, True)  # 256,100,1  hidden128:256,128,1效果较差
-    # rcnn = torch.nn.DataParallel(rcnn)
+    rcnn = RCNN(len(vocab)+1, 512, 100, 1, True)  
     rcnn = rcnn.to(device)
     print(rcnn)
     loss_fn = nn.CrossEntropyLoss()
@@ -345,11 +310,9 @@ if __name__== '__main__':
     train = Mydata(train_ten, train_label_ten)   
     set_seed(seed)
     train_dataloader = dataloader.DataLoader(dataset=train, batch_size=32,shuffle=True, collate_fn=collate_fn)
-        
-    # 训练的轮数
+
     epoch = 89    
     
-        
     for i in range(epoch):
         print("-------第 {} 轮训练开始-------".format(i+1))
             
@@ -364,11 +327,9 @@ if __name__== '__main__':
             label = label.to(device)
             length = length.to(device)
                 
-            #input = pack_padded_sequence(input, length.cpu(), batch_first=True)
             output = rcnn(input, length)
                 
             loss = loss_fn(output, label)
-                
                 
             optimizer.zero_grad()
             loss.backward()
@@ -380,8 +341,6 @@ if __name__== '__main__':
             y_true.extend(label.cpu())
             y_score.extend(torch.softmax(output, dim=-1)[:,1].cpu().detach())
             total_labels += label.size(0)
-                
-                
             
         train_loss /= total_labels
         train_correct = metrics.accuracy_score(y_true, y_pre)
@@ -394,29 +353,5 @@ if __name__== '__main__':
         print(save_content)
     
     save_model = rcnn
-    # save_name = save_path + '20211208_RCNN_ECA_{:03d}-{:.4f}.pt'.format((i+1), train_correct)
-    # save_name = save_path + 'LLPS_RCNN_ECA_{:03d}-{:.4f}.pt'.format((i+1), train_correct)
-    # save_name = save_path + 'PhasepDB_R_RCNN_ECA_{:03d}-{:.4f}.pt'.format((i+1), train_correct)
-    # save_name = save_path + 'PhasepDB_T_RCNN_ECA_{:03d}-{:.4f}.pt'.format((i+1), train_correct)
     save_name = save_path + 'mydata_1507_RCNN_ECA_parallel_{:03d}-{:.4f}.pt'.format((i+1), train_correct)
     torch.save(save_model.state_dict(),save_name)
-
-                
-    
-        
-        
-        
-        
-               
-                
-                      
-                
-                
-            
-            
-            
-            
-            
-
-
-            
