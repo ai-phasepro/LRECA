@@ -30,7 +30,7 @@ if __name__== '__main__':
         os.makedirs(os.path.dirname(protein_class_path))
     protein_file_name = 'pos_sequence_score.csv'
 
-    test_protein_file_name = 'test_dataset/FUS_family_protein.xlsx'
+    test_protein_file_name = 'test_dataset/FUS_family_test.xlsx'
     
     protein_file_path = protein_class_path + protein_file_name
     proteins_scores_all = []
