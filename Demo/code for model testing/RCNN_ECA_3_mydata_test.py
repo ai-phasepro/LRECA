@@ -255,6 +255,7 @@ class RCNN(nn.Module):
             nn.ReLU(),
             nn.Dropout(dropout),
             nn.Linear(128,32),  
+            nn.Linear(128,32),  
             nn.ReLU(),
             nn.Linear(32,2) 
         )
