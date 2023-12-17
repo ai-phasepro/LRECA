@@ -54,15 +54,19 @@ cd Demo
 ### To test our model
 
 ```python
-python "code for model testing/RCNN_ECA_3_mydata_test.py"
+# obtaining the results of classification from test_dataset/mydata_test
+python code_for_model_testing/RCNN_ECA_3_mydata_test.py
 ```
 
 ### Run with other datasets
 
 ```python
-python "code for model testing/RCNN_ECA_3_LLPS_test.py"
-python "code for model testing/RCNN_ECA_3_high_test.py" 
-python "code for model testing/RCNN_ECA_3_R_test.py" 
+# obtaining the results of classification from test_dataset/LLPS_test
+python code_for_model_testing/RCNN_ECA_3_LLPS_test.py
+# obtaining the results of classification from test_dataset/high_test(PhasepDB_highthrought)
+python code_for model_testing/RCNN_ECA_3_high_test.py
+# obtaining the results of classification from the test_dataset/R_test(PhasepDB_Reviewed)
+python code_for_model_testing/RCNN_ECA_3_R_test.py
 ```
 
 ### Classification Results
@@ -74,28 +78,52 @@ The results of classification are stored in the folder ./Demo/classification_out
 __save LRECA model__
 
 ```python
-python RCNN_ECA_saliency/saliency_function/RCNN_ECA_save_model.py
+# save LRECA model trained from mydata for saliency
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/RCNN_ECA_save_model.py
 ```
 
-__Get protein score__
+__Get protein score and statics results__# obtaining the results of the contributing score of individual AAs from mydata
 
 ```python
-python RCNN_ECA_saliency/saliency_function/method/RCNN_ECA_saliency_gradCAM.py
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/method/RCNN_ECA_saliency_gradCAM.py
+# Obtaining the results of Figure 3B of the manuscript, in which 'seg_effect' represents the score proportion of different segments of a protein.
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics4.py
+# obtaining the ranking results of the contribution scores of AAs in mydata proteins
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics5_mydata.py
+
+# obtaining the results of the contribution of individual AAs from FUS proteins
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/verify/RCNN_ECA_saliency_verify_gradCAM.py
+# obtaining the intermedidate results for the contribution of AA segments in five FUS proteins
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics2_FUS_test.py
+# obtaining the intermedidate results for the ranking results of the contribution scores of AAs in FUS proteins
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics2_FUS.py
+# obtaining the ranking results of the contribution scores of AAs in FUS proteins
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics5_FUS.py
+
+# obtaining the results of the contribution of AA segments in five FUS proteins
+python code_for_model_testing/RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_FUS_test.py
+# obtaining the intermedidate results for the results of the contribution of AA segments in five in-house proteins
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/verify/RCNN_ECA_saliency_verify_gradCAM_test.py 
+# obtaining the intermedidate results for the results of the contribution of AA segments in five in-house proteins
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics2_test.py
 ```
 
 __LCRs split__
 
 ```python
-python RCNN_ECA_saliency/saliency_function/verify/RCNN_ECA_saliency_verify_gradCAM.py 
-python RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics2_FUS_test.py 
-python RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_FUS_test.py 
-python RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics2_FUS_train.py 
-python RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_FUS_train.py 
+#obtaining the results of the contribution of AA segments in five FUS proteins
+python code_for_model_testing/RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_FUS_test.py 
+# obtaining the results of the contribution of AA segments in five in-house proteins
+python code_for_model_testing/RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_test.py 
 ```
 
 __Saliency results__
 
-The results of saliency are stored in the folder ./Demo/output.
+The results of saliency are stored in the folder ./Demo/Saliency_output.
+
+***More explanations of the results are described in the Explanation of the results file(/Demo/Explanation of the results.txt).***
+
+**Due to the use of only a portion of test data in the demo, the classification results in the demo are slightly different from those in the manuscript.**
 
 ## License
 
