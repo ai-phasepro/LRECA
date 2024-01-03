@@ -47,7 +47,7 @@ Code run with python=3.8&torch=2.1.1+cu118
 
 ```python
 conda env create --file requirements.yml
-conda activate protein
+conda activate pro
 cd Demo
 ```
 
