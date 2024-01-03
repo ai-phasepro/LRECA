@@ -46,7 +46,7 @@ Gradient-weighted Class Activation Mapping (Grad-CAM) was used to analysis the c
 Code run with python=3.8&torch=2.1.1+cu118
 
 ```python
-conda --name protein --file requirements.txt
+conda env create --file requirements.yml
 conda activate protein
 cd Demo
 ```
