@@ -489,7 +489,7 @@ if __name__== '__main__':
     pos_protein_dir = 'pos_dataset/pos_word_list_mydata_all_1507.txt'
     neg_protein_dir = 'neg_dataset/neg_word_list_1479.txt'
 
-    FUS_protein_path = '../../../../test_dataset/FUS_family_protein_test.xlsx'
+    FUS_protein_path = '../../../../test_dataset/FUS_family_protein.xlsx'
     
     pos_seed = 0
     neg_seed = 1
