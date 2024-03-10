@@ -392,7 +392,7 @@ def visualize_protein_gradient(protein_list, gradients, lengths, dictionary, tru
         protein_pd = pd.DataFrame([protein_split])
         gradient_score_pd = pd.DataFrame([gradient_score])
 
-        save_dir_path = 'Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/'
+        save_dir_path = '../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/'
         if true_label[i] == 1:
             savepath = save_dir_path + 'mydata_1507_data/pos_sequence_score/RCNN_ECA_protein_score.csv'
             if not os.path.exists(os.path.dirname(savepath)):
@@ -417,9 +417,9 @@ if __name__== '__main__':
     device = torch.device("cuda")
     seed = 1
     set_seed(seed)
-    root_dir = '.'
-    pos_protein_dir = '../Data/pos_dataset/pos_word_list_mydata_all_1507.txt'
-    neg_protein_dir = '../Data/neg_dataset/neg_word_list_1479.txt'
+    root_dir = '../../../../../Data'
+    pos_protein_dir = 'pos_dataset/pos_word_list_mydata_all_1507.txt'
+    neg_protein_dir = 'neg_dataset/neg_word_list_1479.txt'
     pos_seed = 0
     neg_seed = 1
     train_seq,train_label = readdata(root_dir, pos_protein_dir, neg_protein_dir, pos_seed, neg_seed)
@@ -443,7 +443,7 @@ if __name__== '__main__':
         train_ten.append(torch.LongTensor(singlelist))
     train_label_ten = from_numpy(train_label)
     train_label_ten = train_label_ten.type(torch.LongTensor)
-    state_dict = torch.load('saliency_model/mydata_1507_RCNN_ECA_089-0.9930.pt')
+    state_dict = torch.load('../../../../saliency_model/mydata_1507_RCNN_ECA_089-0.9930.pt')
     model = RCNN(len(w2n_vocab)+1, 512, 100, 1, True)
     model = model.to(device)
     model.load_state_dict(state_dict)

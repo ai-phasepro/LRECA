@@ -22,14 +22,14 @@ def readdata(root_dir, pos_protein_dir, neg_protein_dir, length, pos_seed, neg_s
     f.close
     with open(neg_protein_path, 'r') as f:
         neg_word_list = f.read().splitlines()
-    f.close
-    neg_word_list = neg_word_list[:length]  
-    pos_word_list = pos_word_list[:length]  
+    f.close  
 
     np.random.seed(pos_seed)  
     np.random.shuffle(pos_word_list)  
     np.random.seed(neg_seed)  
     np.random.shuffle(neg_word_list)
+    neg_word_list = neg_word_list[:length]  
+    pos_word_list = pos_word_list[:length]
     pos_sequence = pos_word_list
     neg_sequence = neg_word_list
     return pos_sequence, neg_sequence
@@ -268,11 +268,9 @@ if __name__== '__main__':
     device = torch.device("cuda")
     seed = 1
     set_seed(seed)
-    root_dir =  '/Data'
+    root_dir =  './Data'
     pos_protein_dir = 'pos_dataset/pos_word_list_mydata_all_1507.txt'
     neg_protein_dir = 'neg_dataset/neg_word_list_1479.txt'
-    save_dir = '../save_model'
-    save_path = os.path.join(root_dir, save_dir)
     list_length = 1479 # pos:253, 592, 4644, 668, 1507 neg:1490, 1479
          
     # mydata_all_1507
@@ -284,9 +282,9 @@ if __name__== '__main__':
         neg_seed = neg_seed_list[i]
         pos_sequence,neg_sequence = readdata(root_dir, pos_protein_dir, neg_protein_dir, list_length, pos_seed, neg_seed)
 
-        if not os.path.exists("/results/classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output"):
-            os.makedirs("/results/classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output")
-        auc_save_csv = '/results/classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output/rcnn_ECA_mydata_epoch60_roc_{}.csv'.format((i+1))
+        if not os.path.exists("../results/classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output"):
+            os.makedirs("../results/classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output")
+        auc_save_csv = '../results/classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output/rcnn_ECA_mydata_epoch60_roc_{}.csv'.format((i+1))
         df_test = pd.DataFrame(columns=['y_true', 'y_score'])
         df_test.to_csv(auc_save_csv, mode='w', index=False)   
 

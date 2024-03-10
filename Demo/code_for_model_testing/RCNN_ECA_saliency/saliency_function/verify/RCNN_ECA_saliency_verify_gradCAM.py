@@ -454,7 +454,7 @@ def visualize_protein_gradient(protein_list, gradients, lengths, dictionary, tru
         protein_pd = pd.DataFrame([protein_split])
         gradient_score_pd = pd.DataFrame([gradient_score])
 
-        save_dir_path = '/results/output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/FUS_family/'
+        save_dir_path = '../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/FUS_family/'
         if not os.path.exists(os.path.dirname(save_dir_path)):
                 os.makedirs(os.path.dirname(save_dir_path))
         if true_label[i] == 1:  
@@ -485,11 +485,11 @@ if __name__== '__main__':
     device = torch.device("cuda")
     seed = 1
     set_seed(seed)
-    root_dir = '../Data'
+    root_dir = '../../../../../Data'
     pos_protein_dir = 'pos_dataset/pos_word_list_mydata_all_1507.txt'
     neg_protein_dir = 'neg_dataset/neg_word_list_1479.txt'
 
-    FUS_protein_path = 'test_dataset/FUS_family_protein_test.xlsx'
+    FUS_protein_path = '../../../../test_dataset/FUS_family_protein_test.xlsx'
     
     pos_seed = 0
     neg_seed = 1
@@ -520,7 +520,7 @@ if __name__== '__main__':
     test_label_ten = from_numpy(test_label)
     test_label_ten = test_label_ten.type(torch.LongTensor)
 
-    state_dict = torch.load('/data/saliency_model/mydata_1507_RCNN_ECA_089-0.9930.pt')
+    state_dict = torch.load('../../../../saliency_model/mydata_1507_RCNN_ECA_089-0.9930.pt')
     model = RCNN(len(w2n_vocab)+1, 512, 100, 1, True) 
     model = model.to(device)
     model.load_state_dict(state_dict)

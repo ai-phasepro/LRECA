@@ -22,13 +22,14 @@ def readdata(root_dir, pos_protein_dir, neg_protein_dir, length, pos_seed, neg_s
     with open(neg_protein_path, 'r') as f:
         neg_word_list = f.read().splitlines()
     f.close
-    neg_word_list = neg_word_list[:length]  
-    pos_word_list = pos_word_list[:length]  
+     
 
     np.random.seed(pos_seed)  
     np.random.shuffle(pos_word_list)  
     np.random.seed(neg_seed)  
     np.random.shuffle(neg_word_list)
+    neg_word_list = neg_word_list[:length]  
+    pos_word_list = pos_word_list[:length] 
     pos_sequence = pos_word_list
     neg_sequence = neg_word_list
     return pos_sequence, neg_sequence

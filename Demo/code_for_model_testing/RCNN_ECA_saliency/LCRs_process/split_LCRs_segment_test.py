@@ -218,7 +218,7 @@ def save_segment(savepath, max_segment_idx_list, max_protein_segment_list, prote
 
 
 if __name__== '__main__':
-    FUS_test_path='Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/test/test_statics.csv'
+    FUS_test_path='../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/test/test_statics.csv'
     train_proteins_scores_all = []
     with open(FUS_test_path, 'r') as f:
         reader = csv.reader(f)
@@ -247,10 +247,10 @@ if __name__== '__main__':
         log_density_list.append(log_density)
         density_list.append(np.exp(log_density))
 
-    segment_savepath = 'Saliency_output/LCRs_process/test/density_segment/density_segment_train/'
-    density_savepath = 'Saliency_output/LCRs_process/test/density_map/LCRs_protein_densitymap_train'
-    if not os.path.exists('Saliency_output/LCRs_process/test/density_map/'):
-        os.makedirs('Saliency_output/LCRs_process/test/density_map/')
+    segment_savepath = '../../../Saliency_output/LCRs_process/test/density_segment/density_segment_train/'
+    density_savepath = '../../../Saliency_output/LCRs_process/test/density_map/LCRs_protein_densitymap_train'
+    if not os.path.exists('../../../Saliency_output/LCRs_process/test/density_map/'):
+        os.makedirs('../../../Saliency_output/LCRs_process/test/density_map/')
     save_density(density_savepath +'.csv', train_proteins_names, train_proteins, train_scores, log_density_list)
 
     print("ALL success")

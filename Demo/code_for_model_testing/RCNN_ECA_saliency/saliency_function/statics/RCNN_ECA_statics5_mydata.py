@@ -5,7 +5,7 @@ import csv
 
 
 if __name__== '__main__':
-    dir_path = 'Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/'
+    dir_path = '../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/'
 
     protein_class = 'pos_sequence_score'
 

@@ -3,8 +3,8 @@ import pandas as pd
 import os
 import csv
 
-FUS_test_path='Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/FUS_family/FUS_statics.csv'
-save_file_path = 'Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/FUS_family/FUS_acid_avgscore.csv'
+FUS_test_path='../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/FUS_family/FUS_statics.csv'
+save_file_path = '../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/FUS_family/FUS_acid_avgscore.csv'
 
 train_proteins_scores_all = []
 with open(FUS_test_path, 'r') as f:

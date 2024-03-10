@@ -22,20 +22,20 @@ def readdata(root_dir, pos_protein_dir, neg_protein_dir, length, pos_seed, neg_s
     with open(neg_protein_path, 'r') as f:
         neg_word_list = f.read().splitlines()
     f.close
-    neg_word_list = neg_word_list[:length]  
-    pos_word_list = pos_word_list[:length]  
 
     np.random.seed(pos_seed)  
     np.random.shuffle(pos_word_list)  
     np.random.seed(neg_seed)  
     np.random.shuffle(neg_word_list)
+    neg_word_list = neg_word_list[:length]  
+    pos_word_list = pos_word_list[:length] 
     pos_sequence = pos_word_list
     neg_sequence = neg_word_list
     return pos_sequence, neg_sequence
 
-def readdata_test(root_dir, pos_protein_dir, neg_protein_dir):
-    pos_protein_path = os.path.join(root_dir, pos_protein_dir)
-    neg_protein_path = os.path.join(root_dir, neg_protein_dir)
+def readdata_test(pos_protein_dir, neg_protein_dir):
+    pos_protein_path = pos_protein_dir
+    neg_protein_path = neg_protein_dir
     with open(pos_protein_path, 'r') as f:
         pos_word_list = f.read().splitlines()
     f.close
@@ -255,7 +255,6 @@ class RCNN(nn.Module):
             nn.ReLU(),
             nn.Dropout(dropout),
             nn.Linear(128,32),  
-            nn.Linear(128,32),  
             nn.ReLU(),
             nn.Linear(32,2) 
         )
@@ -291,14 +290,12 @@ if __name__== '__main__':
     device = torch.device("cuda")
     seed = 1
     set_seed(seed)
-    root_dir =  '../Data'
+    root_dir =  '../../Data'
     pos_protein_dir = 'pos_dataset/pos_word_list_mydata_all_1507.txt'
     neg_protein_dir = 'neg_dataset/neg_word_list_1479.txt'
-    pos_test_dir = 'test_dataset/pos_dataset/pos_word_list_mydata_test.txt'
-    neg_test_dir = 'test_dataset/neg_dataset/neg_word_list_mydata_test.txt'
-    save_dir = './save_model_mydata'
-    save_path = os.path.join(root_dir, save_dir)
-    model_path = 'trained_model/model_mydata_1.pt'
+    pos_test_dir = '../test_dataset/pos_dataset/pos_word_list_mydata_test.txt'
+    neg_test_dir = '../test_dataset/neg_dataset/neg_word_list_mydata_test.txt'
+    model_path = '../trained_model/model_mydata_1.pt'
     list_length = 1479 # pos:253, 592, 4644, 668, 1507 neg:1490, 1479
 
     pos_seed_list = [20]
@@ -308,13 +305,13 @@ if __name__== '__main__':
     for i in range(len(pos_seed_list)):
         pos_seed = pos_seed_list[i]
         neg_seed = neg_seed_list[i]
-        pos_test_sequence,neg_test_sequence = readdata_test(root_dir, pos_test_dir, neg_test_dir)
+        pos_test_sequence,neg_test_sequence = readdata_test(pos_test_dir, neg_test_dir)
         pos_sequence, neg_sequence = readdata(root_dir, pos_protein_dir, neg_protein_dir, list_length, pos_seed, neg_seed)
 
-        if not os.path.exists("./classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output"):
-            os.makedirs("./classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output")
-        auc_save_csv = './classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output/rcnn_ECA_mydata_test_roc_{}.csv'.format((i+10))
-        result_save_csv = './classification_output/dataset_RCNN_ECA_output/mydata_all_1507_output/RCNN_ECA_em1024_128_32_output/result.csv'
+        if not os.path.exists("../classification_output/mydata_all_1507_output"):
+            os.makedirs("../classification_output/mydata_all_1507_output")
+        auc_save_csv = '../classification_output/mydata_all_1507_output/rcnn_ECA_mydata_test_roc_{}.csv'.format((i+10))
+        result_save_csv = '../classification_output/mydata_all_1507_output/result.csv'
         df_test = pd.DataFrame(columns=['y_true', 'y_score'])
         df_test.to_csv(auc_save_csv, mode='w', index=False)   
         df_test = pd.DataFrame(columns=['acc', 'sen', 'spe', 'auc'])
@@ -347,7 +344,7 @@ if __name__== '__main__':
 
         test_pos_seq = pos_test_sequence
         test_neg_seq = neg_test_sequence
-        test_pos_seq, test_neg_seq = readdata_test(root_dir, pos_test_dir, neg_test_dir)
+        test_pos_seq, test_neg_seq = readdata_test(pos_test_dir, neg_test_dir)
         
         train_val_pos_seq = pos_sequence[:int(pos_num*start)] + pos_sequence[int(pos_num*(start+interval)):]
         train_val_neg_seq = neg_sequence[:int(neg_num * start)] + neg_sequence[int(neg_num * (start + interval)):]

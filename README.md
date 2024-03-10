@@ -46,8 +46,10 @@ Gradient-weighted Class Activation Mapping (Grad-CAM) was used to analysis the c
 Code run with python=3.8&torch=2.1.1+cu118
 
 ```python
-conda env create --file requirements.yml
+conda create -n pro python--3.8
 conda activate pro
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip install -r requirements.txt
 cd Demo
 ```
 
@@ -69,9 +71,22 @@ python code_for model_testing/RCNN_ECA_3_high_test.py
 python code_for_model_testing/RCNN_ECA_3_R_test.py
 ```
 
+### Run with personal datasets
+
+```python
+# output to Demo/classification_output/personal_output
+python code_for_model_testing/RCNN_ECA_personal_test.py --pos_test_dir "your pos_dataset path for test" --neg_test_dir "your neg_dataset path for test"
+```
+
 ### Classification Results
 
 The results of classification are stored in the folder ./Demo/classification_output, including protein score, accuracy, sensitivity, specificity and area under the ROC curve (AUC) for the four datasets.
+
+### Train with personal datasets
+
+```python
+python code_for_model_testing/RCNN_ECA_personal_test.py --pos_test_dir "your pos_dataset path for test" --neg_test_dir "your neg_dataset path for test"
+```
 
 ### Saliency
 
@@ -79,12 +94,16 @@ __save LRECA model__
 
 ```python
 # save LRECA model trained from mydata for saliency
-python code_for_model_testing/RCNN_ECA_saliency/saliency_function/RCNN_ECA_save_model.py
+python RCNN_model/RCNN_ECA_save_model.py 
+
+# personal dataset
+python RCNN_model/RCNN_ECA_save_model.py --pos_protein_dir "your pos_dataset path" --neg_protein_dir "your neg_dataset path"
 ```
 
-__Get protein score and statics results__# obtaining the results of the contributing score of individual AAs from mydata
+__Get protein score and statics results__
 
 ```python
+# obtaining the results of the contributing score of individual AAs from mydata
 python code_for_model_testing/RCNN_ECA_saliency/saliency_function/method/RCNN_ECA_saliency_gradCAM.py
 # Obtaining the results of Figure 3B of the manuscript, in which 'seg_effect' represents the score proportion of different segments of a protein.
 python code_for_model_testing/RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics4.py
@@ -106,6 +125,16 @@ python code_for_model_testing/RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_
 python code_for_model_testing/RCNN_ECA_saliency/saliency_function/verify/RCNN_ECA_saliency_verify_gradCAM_test.py 
 # obtaining the intermedidate results for the results of the contribution of AA segments in five in-house proteins
 python code_for_model_testing/RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics2_test.py
+
+# obtaining the results of the contributing score of individual AAs from personal dataset
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/verify/RCNN_ECA_saliency_verify_gradCAM_personal.py --protein_path "your dataset path"
+# obtaining the intermedidate results for the contribution of AA segments in personal dataset
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics2_personal.py --protein_path "your dataset path"
+# Obtaining the results of Figure 3B of the manuscript, in which 'seg_effect' represents the score proportion of different segments of a protein.
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics4_personal.py
+# obtaining the ranking results of the contribution scores of AAs in personal dataset
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/statics/RCNN_ECA_statics5_personal.py
+
 ```
 
 __LCRs split__
@@ -115,6 +144,9 @@ __LCRs split__
 python code_for_model_testing/RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_FUS_test.py 
 # obtaining the results of the contribution of AA segments in five in-house proteins
 python code_for_model_testing/RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_test.py 
+
+# obtaining the results of the contribution of AA segments in personal dataset
+python code_for_model_testing/RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_personal.py 
 ```
 
 __Saliency results__
