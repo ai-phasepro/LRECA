@@ -3,17 +3,17 @@ import pandas as pd
 import os
 import csv
 
-FUS_test_path='Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/FUS_family/FUS_statics.csv'
-save_file_path = 'Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/FUS_family/FUS_acid_avgscore.csv'
+FUS_test_path='../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/FUS_family/FUS_statics.csv'
+save_file_path = '../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/FUS_family/FUS_acid_avgscore.csv'
 
 train_proteins_scores_all = []
 with open(FUS_test_path, 'r') as f:
     reader = csv.reader(f)
     for line in reader:
         train_proteins_scores_all.append(line)
-train_proteins_names = train_proteins_scores_all[::5] 
-train_proteins = train_proteins_scores_all[1::5]
-train_scores = train_proteins_scores_all[2::5]
+train_proteins_names = train_proteins_scores_all[::5][:-2]
+train_proteins = train_proteins_scores_all[1::5][:-2]
+train_scores = train_proteins_scores_all[2::5][:-2]
 
 acid_scoreList_dict = {}
 
@@ -38,5 +38,17 @@ for key, val in acid_scoreList_dict.items():
 acid_score = pd.read_csv(save_file_path)
 acid_score = acid_score.sort_values(by=['avg_score'],ascending=[False])
 print(acid_score)
-acid_score_pd.to_csv(save_file_path,  mode='a', header=False, index=False, float_format='%.4f')
+os.remove(save_file_path)
+df_test = pd.DataFrame(columns=['acid', 'avg_score'])
+df_test.to_csv(save_file_path, index=False)
+acid_score.to_csv(save_file_path, index=False)
 print('success')
+
+
+
+    
+    
+
+
+
+    

@@ -27,14 +27,14 @@ if __name__== '__main__':
 
 
     # outAll outFinal
-    dir_path = '/results/output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/'
+    dir_path = 'Results/output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/'
 
     protein_class_path = dir_path + 'FUS_family/'
     if not os.path.exists(os.path.dirname(protein_class_path)):
         os.makedirs(os.path.dirname(protein_class_path))
     protein_file_name = 'pos_sequence_score.csv'
 
-    test_protein_file_name = '/data/FUS_family_test.xlsx'
+    test_protein_file_name = 'Data/FUS_family_test.xlsx'
     
     protein_file_path = protein_class_path + protein_file_name
     proteins_scores_all = []

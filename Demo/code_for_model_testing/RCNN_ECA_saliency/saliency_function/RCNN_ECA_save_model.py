@@ -12,9 +12,9 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 import pandas as pd
 import copy
 
-def readdata(root_dir, pos_protein_dir, neg_protein_dir,  pos_seed, neg_seed):
-    pos_protein_path = os.path.join(root_dir, pos_protein_dir)
-    neg_protein_path = os.path.join(root_dir, neg_protein_dir)
+def readdata(pos_protein_dir, neg_protein_dir,  pos_seed, neg_seed):
+    pos_protein_path = pos_protein_dir
+    neg_protein_path = neg_protein_dir
     with open(pos_protein_path, 'r') as f:
         pos_word_list = f.read().splitlines()
     f.close
@@ -266,21 +266,27 @@ def set_seed(seed):
 
 
 if __name__== '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--save_path', type=str, default = '../../../saliency_model')
+    parser.add_argument('--pos_protein_dir', type=str, default = '../../../../Data/pos_dataset/pos_word_list_mydata_all_1507.txt')
+    parser.add_argument('--neg_protein_dir', type=str, default = '../../../../Data/neg_dataset/neg_word_list_1479.txt')
+    parser.add_argument('--learning_rate', type=float, default = 1e-3)
+    parser.add_argument('--epoch', type=int, default = 89)
+    args = parser.parse_args()
+    
     device = torch.device("cuda")
     seed = 1
     set_seed(seed)
-    root_dir = '.'
-    pos_protein_dir = '../Data/pos_dataset/pos_word_list_mydata_all_1507.txt'
-    neg_protein_dir = '../Data/neg_dataset/neg_word_list_1479.txt'
-    save_dir = 'saliency_model'
-    save_path = os.path.join(root_dir, save_dir)
+    pos_protein_dir = args.pos_protein_dir
+    neg_protein_dir = args.neg_protein_dir
+    save_path = args.save_path
     
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
     pos_seed = 0
     neg_seed = 1
-    train_seq,train_label = readdata(root_dir, pos_protein_dir, neg_protein_dir, pos_seed, neg_seed)
+    train_seq,train_label = readdata(pos_protein_dir, neg_protein_dir, pos_seed, neg_seed)
 
     print(len(train_seq))
     print(len(train_label))
@@ -303,7 +309,7 @@ if __name__== '__main__':
     loss_fn = nn.CrossEntropyLoss()
     
     loss_fn = loss_fn.to(device)
-    learning_rate = 1e-4
+    learning_rate = args.learning_rate
     optimizer = optim.Adam(rcnn.parameters(), lr=learning_rate, betas=(0.9,0.99))
     scheduler = ReduceLROnPlateau(optimizer=optimizer, mode='max', factor=0.1, patience=10, verbose=True)
     
@@ -311,7 +317,7 @@ if __name__== '__main__':
     set_seed(seed)
     train_dataloader = dataloader.DataLoader(dataset=train, batch_size=32,shuffle=True, collate_fn=collate_fn)
 
-    epoch = 89    
+    epoch = args.epoch   
     
     for i in range(epoch):
         print("-------第 {} 轮训练开始-------".format(i+1))

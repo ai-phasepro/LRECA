@@ -5,7 +5,11 @@ import csv
 
 
 if __name__== '__main__':
-    dir_path = 'Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/'
+
+    # outAll outFinal
+    dir_path = '../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/'
+
+    # dir_path = './RCNN_ECA_saliency/output/gradCAM/gradCAM_noSoftmax_outFinal_protein_score/'
 
     protein_class = 'pos_sequence_score'
 
@@ -18,6 +22,7 @@ if __name__== '__main__':
         reader = csv.reader(f)
         for line in reader:
             proteins_scores_all.append(line)
+
     proteins = proteins_scores_all[::2]
     scores = proteins_scores_all[1::2]
 
@@ -42,6 +47,17 @@ if __name__== '__main__':
     acid_score = pd.read_csv(save_file_path)
     acid_score = acid_score.sort_values(by=['avg_score'],ascending=[False])
     print(acid_score)
-    acid_score_pd.to_csv(save_file_path,  mode='a', header=False, index=False, float_format='%.4f')   
-    
+    os.remove(save_file_path)
+    df_test = pd.DataFrame(columns=['acid', 'avg_score'])
+    df_test.to_csv(save_file_path, index=False)
+    acid_score.to_csv(save_file_path)
     print('success')
+
+
+
+    
+    
+
+
+
+    

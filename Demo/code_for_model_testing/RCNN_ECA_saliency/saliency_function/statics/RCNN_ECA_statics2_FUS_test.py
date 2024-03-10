@@ -24,14 +24,18 @@ def save_test_protein_statics(savepath1, name, protein, score):
 
 
 if __name__== '__main__':
-    dir_path = 'Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/'
+
+
+    # outAll outFinal
+    dir_path = '../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/'
 
     protein_class_path = dir_path + 'FUS_family/'
     if not os.path.exists(os.path.dirname(protein_class_path)):
         os.makedirs(os.path.dirname(protein_class_path))
     protein_file_name = 'pos_sequence_score.csv'
 
-    test_protein_file_name = 'test_dataset/FUS_family_protein_test.xlsx'
+    # test_protein_file_name = './RCNN_ECA_saliency/output/FUS_family_test.xlsx'
+    test_protein_file_name = '../../../../test_dataset/FUS_family_protein_test.xlsx'
     
     protein_file_path = protein_class_path + protein_file_name
     proteins_scores_all = []
@@ -41,6 +45,7 @@ if __name__== '__main__':
             proteins_scores_all.append(line)
     proteins = proteins_scores_all[::2]
     scores = proteins_scores_all[1::2]
+
     search_protein_dataset = [''.join(protein).upper() for protein in proteins]
 
     verify_data = pd.read_excel(test_protein_file_name,header=None)
@@ -48,6 +53,8 @@ if __name__== '__main__':
     verify_proteins_list = verify_proteins.tolist()
     verify_names = verify_data.iloc[:, 0].values.ravel()
     verify_names_list = verify_names.tolist()
+    
+
 
     for idx in range(len(verify_proteins_list)):
         verify_protein = verify_proteins_list[idx]
@@ -56,6 +63,7 @@ if __name__== '__main__':
             searchindex = search_protein_dataset.index(verify_protein)
             searchprotein = proteins[searchindex]
             searchscore = scores[searchindex]
+            # save_test_protein_statics(protein_class_path + 'FUS_test_statics.csv', verify_name, searchprotein, searchscore)
             save_test_protein_statics(protein_class_path + 'FUS_test_statics.csv', verify_name, searchprotein, searchscore)
         else:
             print(verify_name)

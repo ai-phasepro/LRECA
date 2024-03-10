@@ -311,10 +311,10 @@ if __name__== '__main__':
     # pos_protein_dir = 'pos_word_list_PhasepDB_Reviewed.txt'
     # pos_protein_dir = 'pos_word_list_PhasepDB_high_throughput.txt'
     # pos_protein_dir = 'pos_word_list_20211208.txt'
-    pos_protein_dir = '/data/processed_dataset/pos_word_list_mydata_all_1507.txt'
+    pos_protein_dir = 'Data/processed_dataset/pos_word_list_mydata_all_1507.txt'
     # neg_protein_dir = 'neg_word_list.txt'
-    neg_protein_dir = '/data/processed_dataset/neg_word_list_1479.txt'
-    save_dir = '/results/saliency_model'
+    neg_protein_dir = 'Data/processed_dataset/neg_word_list_1479.txt'
+    save_dir = 'Results/saliency_model'
     save_path = os.path.join(root_dir, save_dir)
     
     if not os.path.exists(save_path):
