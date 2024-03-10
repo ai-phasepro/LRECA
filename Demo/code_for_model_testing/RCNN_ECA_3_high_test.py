@@ -23,7 +23,9 @@ def readdata(root_dir, pos_protein_dir, neg_protein_dir, length, pos_seed, neg_s
     f.close 
 
     np.random.seed(pos_seed)  
+    np.random.seed(pos_seed)  
     np.random.shuffle(pos_word_list)  
+    np.random.seed(neg_seed)  
     np.random.seed(neg_seed)  
     np.random.shuffle(neg_word_list)
     neg_word_list = neg_word_list[:length]  

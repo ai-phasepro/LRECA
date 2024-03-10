@@ -23,7 +23,9 @@ def readdata(root_dir, pos_protein_dir, neg_protein_dir, length, pos_seed, neg_s
     f.close
 
     np.random.seed(pos_seed) 
+    np.random.seed(pos_seed) 
     np.random.shuffle(pos_word_list)  
+    np.random.seed(neg_seed) 
     np.random.seed(neg_seed) 
     np.random.shuffle(neg_word_list)
     neg_word_list = neg_word_list[:length]  
@@ -329,11 +331,15 @@ if __name__== '__main__':
         result_save_csv = '../classification_output/LLPS_output/result.csv'
         df_test = pd.DataFrame(columns=['y_true', 'y_score'])
         df_test.to_csv(auc_save_csv, index=False)   
+        df_test.to_csv(auc_save_csv, index=False)   
         df_test = pd.DataFrame(columns=['acc', 'sen', 'spe', 'auc'])
         df_test.to_csv(result_save_csv, index=False)
 
+
         neg_num = len(neg_test_sequence)
         pos_num = len(pos_test_sequence)
+        print('pos_num=',pos_num)  
+        print('neg_num=',neg_num)  
         print('pos_num=',pos_num)  
         print('neg_num=',neg_num)  
         
@@ -342,6 +348,7 @@ if __name__== '__main__':
 
         start = 0.9
         interval = 0.1
+        val_split = 0.1
         val_split = 0.1
         
         total_tp = 0
@@ -364,6 +371,8 @@ if __name__== '__main__':
         train_val_neg_seq = neg_sequence[:int(neg_num * start)]
         train_val_pos_num = len(train_val_pos_seq)  
         train_val_neg_num = len(train_val_neg_seq)  
+        train_val_pos_num = len(train_val_pos_seq)  
+        train_val_neg_num = len(train_val_neg_seq)  
         
         set_seed(seed)
         np.random.shuffle(train_val_pos_seq)
@@ -375,7 +384,10 @@ if __name__== '__main__':
 
         test_y = np.hstack((np.zeros(shape=(len(test_neg_seq), )),
                         np.ones(shape=(len(test_pos_seq), ))))  
+                        np.ones(shape=(len(test_pos_seq), ))))  
 
+        print('test_pos', test_y[test_y == 1].shape)    
+        print('test_neg', test_y[test_y == 0].shape)    
         print('test_pos', test_y[test_y == 1].shape)    
         print('test_neg', test_y[test_y == 0].shape)    
 
@@ -395,6 +407,7 @@ if __name__== '__main__':
         test_label_ten = test_label_ten.type(torch.LongTensor)
             
         state_dict = torch.load(model_path)
+        rcnn = RCNN(len(vocab)+1, 2048, 100, 1, True) 
         rcnn = RCNN(len(vocab)+1, 2048, 100, 1, True) 
         rcnn = rcnn.to(device)
         rcnn.load_state_dict(state_dict)

@@ -46,7 +46,6 @@ if __name__== '__main__':
     proteins = proteins_scores_all[::2]
     scores = proteins_scores_all[1::2]
 
-
     search_protein_dataset = [''.join(protein).upper() for protein in proteins]
 
     verify_data = pd.read_excel(test_protein_file_name,header=None)
@@ -70,12 +69,3 @@ if __name__== '__main__':
             print(verify_name)
             continue
     print('success')
-
-
-
-    
-    
-
-
-
-    

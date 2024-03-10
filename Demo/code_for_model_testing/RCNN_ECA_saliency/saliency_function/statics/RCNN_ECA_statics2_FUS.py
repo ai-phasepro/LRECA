@@ -6,7 +6,7 @@ import csv
 
 def save_test_protein_statics(savepath1, name, protein, score):
     sorted_id = sorted(range(len(score)), key=lambda k: score[k], reverse=True)
-    protein_sort_score = np.array(score)[sorted_id]  # 记录一个蛋白质中整个序列根据score排序后数据，阳性降序、阴性升序
+    protein_sort_score = np.array(score)[sorted_id]  
     protein_sort_acid = np.array(protein)[sorted_id]
 
     protein_name = pd.Series([name], index=['name'])
@@ -14,7 +14,6 @@ def save_test_protein_statics(savepath1, name, protein, score):
     score_pd = pd.DataFrame([score], index=['score'])
     protein_sort_protein_pd = pd.DataFrame([protein_sort_acid], index=['sort_protein'])
     protein_sort_score_pd = pd.DataFrame([protein_sort_score], index=['soct_score'])
-
 
     protein_name.to_csv(savepath1, mode='a', header=False, index=True)
     protein_pd.to_csv(savepath1, mode='a', header=False, index=True)
@@ -45,16 +44,12 @@ if __name__== '__main__':
             proteins_scores_all.append(line)
     proteins = proteins_scores_all[::2]
     scores = proteins_scores_all[1::2]
-
-
     search_protein_dataset = [''.join(protein).upper() for protein in proteins]
-
     verify_data = pd.read_excel(test_protein_file_name,header=None)
     verify_proteins = verify_data.iloc[:, 1].values.ravel()
     verify_proteins_list = verify_proteins.tolist()
     verify_names = verify_data.iloc[:, 0].values.ravel()
     verify_names_list = verify_names.tolist()
-    
 
 
     for idx in range(len(verify_proteins_list)):
