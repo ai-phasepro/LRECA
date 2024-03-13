@@ -259,7 +259,6 @@ class RCNN(nn.Module):
             nn.Linear(128,32),  
             nn.ReLU(),
             nn.Linear(32,2) 
-            nn.Linear(32,2) 
         )
         
     def forward(self, x, length):
