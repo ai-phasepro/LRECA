@@ -255,8 +255,9 @@ class RCNN(nn.Module):
             nn.ReLU(),
             nn.Dropout(dropout),
             nn.Linear(128,32),  
-            nn.ReLU(),
+            nn.ReLU()
             nn.Linear(32,2)
+
         )
         
     def forward(self, x, length):
