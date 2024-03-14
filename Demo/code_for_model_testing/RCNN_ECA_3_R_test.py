@@ -352,7 +352,6 @@ if __name__== '__main__':
 
         test_pos_seq = pos_test_sequence
         test_neg_seq = neg_test_sequence
-        test_pos_seq, test_neg_seq = readdata_test(pos_test_dir, neg_test_dir)
         
         train_val_pos_seq = pos_sequence[:int(pos_num*start)] + pos_sequence[int(pos_num*(start+interval)):]
         train_val_neg_seq = neg_sequence[:int(neg_num * start)] + neg_sequence[int(neg_num * (start + interval)):]

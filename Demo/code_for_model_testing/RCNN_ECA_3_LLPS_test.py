@@ -23,9 +23,7 @@ def readdata(root_dir, pos_protein_dir, neg_protein_dir, length, pos_seed, neg_s
     f.close
 
     np.random.seed(pos_seed) 
-    np.random.seed(pos_seed) 
     np.random.shuffle(pos_word_list)  
-    np.random.seed(neg_seed) 
     np.random.seed(neg_seed) 
     np.random.shuffle(neg_word_list)
     neg_word_list = neg_word_list[:length]  
@@ -330,8 +328,7 @@ if __name__== '__main__':
         auc_save_csv = '../classification_output/LLPS_output/rcnn_ECA_LLPS_epoch100_roc_{}.csv'.format((i+10))
         result_save_csv = '../classification_output/LLPS_output/result.csv'
         df_test = pd.DataFrame(columns=['y_true', 'y_score'])
-        df_test.to_csv(auc_save_csv, index=False)   
-        df_test.to_csv(auc_save_csv, index=False)   
+        df_test.to_csv(auc_save_csv, index=False)     
         df_test = pd.DataFrame(columns=['acc', 'sen', 'spe', 'auc'])
         df_test.to_csv(result_save_csv, index=False)
 
@@ -365,7 +362,6 @@ if __name__== '__main__':
 
         test_pos_seq = pos_test_sequence
         test_neg_seq = neg_test_sequence
-        test_pos_seq, test_neg_seq = readdata_test(pos_test_dir, neg_test_dir)
         
         train_val_pos_seq = pos_sequence[:int(pos_num * start)]
         train_val_neg_seq = neg_sequence[:int(neg_num * start)]
@@ -383,7 +379,6 @@ if __name__== '__main__':
         train_neg_seq = train_val_neg_seq[int(train_val_neg_num*val_split):]
 
         test_y = np.hstack((np.zeros(shape=(len(test_neg_seq), )),
-                        np.ones(shape=(len(test_pos_seq), ))))  
                         np.ones(shape=(len(test_pos_seq), ))))  
 
         print('test_pos', test_y[test_y == 1].shape)    

@@ -24,10 +24,8 @@ def readdata(root_dir, pos_protein_dir, neg_protein_dir, length, pos_seed, neg_s
     f.close
 
     np.random.seed(pos_seed)  
-    np.random.seed(pos_seed)  
     np.random.shuffle(pos_word_list)  
-    np.random.seed(neg_seed)  
-    np.random.seed(neg_seed)  
+    np.random.seed(neg_seed)    
     np.random.shuffle(neg_word_list)
     neg_word_list = neg_word_list[:length]  
     pos_word_list = pos_word_list[:length] 
@@ -346,7 +344,6 @@ if __name__== '__main__':
 
         test_pos_seq = pos_test_sequence
         test_neg_seq = neg_test_sequence
-        test_pos_seq, test_neg_seq = readdata_test(pos_test_dir, neg_test_dir)
         
         train_val_pos_seq = pos_sequence[:int(pos_num*start)] + pos_sequence[int(pos_num*(start+interval)):]
         train_val_neg_seq = neg_sequence[:int(neg_num * start)] + neg_sequence[int(neg_num * (start + interval)):]
