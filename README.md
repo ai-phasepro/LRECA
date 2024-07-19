@@ -57,7 +57,8 @@ cd Demo
 
 ```python
 # obtaining the results of classification from test_dataset/mydata_test
-python code_for_model_testing/RCNN_ECA_3_mydata_test.py
+cd code_for_model_testing
+python RCNN_ECA_3_mydata_test.py
 ```
 
 ### Run with other datasets

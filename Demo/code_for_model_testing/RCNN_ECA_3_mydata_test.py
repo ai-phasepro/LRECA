@@ -18,10 +18,10 @@ def readdata(root_dir, pos_protein_dir, neg_protein_dir, length, pos_seed, neg_s
     neg_protein_path = os.path.join(root_dir, neg_protein_dir)
     with open(pos_protein_path, 'r') as f:
         pos_word_list = f.read().splitlines()
-    f.close
+
     with open(neg_protein_path, 'r') as f:
         neg_word_list = f.read().splitlines()
-    f.close
+
 
     np.random.seed(pos_seed)  
     np.random.shuffle(pos_word_list)  
@@ -38,10 +38,10 @@ def readdata_test(pos_protein_dir, neg_protein_dir):
     neg_protein_path = neg_protein_dir
     with open(pos_protein_path, 'r') as f:
         pos_word_list = f.read().splitlines()
-    f.close
+
     with open(neg_protein_path, 'r') as f:
         neg_word_list = f.read().splitlines()
-    f.close
+
 
     pos_sequence = pos_word_list
     neg_sequence = neg_word_list
@@ -53,10 +53,10 @@ def writedata(root_dir, pos_test_dir, neg_test_dir, pos_sequence, neg_sequence):
     
     with open(pos_protein_path, 'w') as f:
         f.write('\n'.join(pos_sequence))
-    f.close
+
     with open(neg_protein_path, 'w') as f:
         f.write('\n'.join(neg_sequence))
-    f.close
+
     
 def word2Num(train, test, min=0, max=None, max_features=None):
     dic = {}
@@ -255,7 +255,7 @@ class RCNN(nn.Module):
             nn.ReLU(),
             nn.Dropout(dropout),
             nn.Linear(128,32),  
-            nn.ReLU()
+            nn.ReLU(),
             nn.Linear(32,2)
 
         )
