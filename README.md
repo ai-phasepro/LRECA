@@ -1,5 +1,9 @@
 # LRECA
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1A2R2Lk42hZ1tnaIRzLhTFyMjdelsLtEr?usp=sharing)
+
+
+
 The source codes and a demo are provided to evaluate our LRECA model's ability to discern the phase-separation potential of proteins directly from amino acid (AA) sequences. This demo further scrutinizes the model's explainability by interpreting its predictions, aiming to ascertain the impact of individual amino acids and their sequential patterns on biomolecular condensation regulation. The accompanying code is linked to the paper titled "Discovery of phase separation protein with single amino acid attributions by unbiased deep-learning".
 
 The source codes can be used to train and test the model with 10-fold cross validation on all datasets. However, it will take a lot of time to train the model if you do not have a good GPU. We also provide a demo that includes the trained models and corresponding testing data. The demo can run in a normal computer and will finish in about six minutes.
