@@ -2,8 +2,6 @@
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1A2R2Lk42hZ1tnaIRzLhTFyMjdelsLtEr?usp=sharing)
 
-
-
 The source codes and a demo are provided to evaluate our LRECA model's ability to discern the phase-separation potential of proteins directly from amino acid (AA) sequences. This demo further scrutinizes the model's explainability by interpreting its predictions, aiming to ascertain the impact of individual amino acids and their sequential patterns on biomolecular condensation regulation. The accompanying code is linked to the paper titled "Discovery of phase separation protein with single amino acid attributions by unbiased deep-learning".
 
 The source codes can be used to train and test the model with 10-fold cross validation on all datasets. However, it will take a lot of time to train the model if you do not have a good GPU. We also provide a demo that includes the trained models and corresponding testing data. The demo can run in a normal computer and will finish in about six minutes.
@@ -152,6 +150,18 @@ python code_for_model_testing/RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_
 
 # obtaining the results of the contribution of AA segments in personal dataset
 python code_for_model_testing/RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_personal.py 
+```
+
+**Get saliency results for your dataset**
+
+```python
+cd code_for_model_testing/RCNN_ECA_saliency
+# Get saliency results for single seq
+# replace test_seq with your protein_seq 
+python get_score_foesingle.py --seq test_seq
+# Get saliency results for mutiple seqs
+# put your dataset file in Demo/test_dataset(the dataset file should be {datasetname}.xlsx ,and refer to test.xlsx for formatting of documents.)
+python get_score_forsingle.py --dataset dasetname
 ```
 
 __Saliency results__
