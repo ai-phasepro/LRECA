@@ -26,12 +26,12 @@ def save_test_protein_statics(savepath1, name, protein, score):
 if __name__== '__main__':
 
 
-    dir_path = '../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/'
+    dir_path = '../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/'
 
     protein_class_path = dir_path + 'forsingle/'
     protein_file_name = 'pos_sequence_score.csv'
 
-    test_protein_file_name = '../../../../Saliency_output/test.xlsx'
+    test_protein_file_name = '../../Saliency_output/test.xlsx'
     
     protein_file_path = protein_class_path + protein_file_name
     proteins_scores_all = []

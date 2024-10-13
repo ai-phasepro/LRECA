@@ -506,7 +506,7 @@ def visualize_protein_gradient(protein_list, gradients, lengths, dictionary, tru
 
 
         # 保存蛋白质的每个氨基酸和对应score
-        save_dir_path = '../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/forsingle/'
+        save_dir_path = '../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/forsingle/'
         if true_label[i] == 1:  # 阳性为1
 
             savepath = save_dir_path + 'pos_sequence_score.csv'
@@ -561,10 +561,10 @@ if __name__== '__main__':
     seed = 1
     set_seed(seed)
     root_dir = '.'
-    pos_protein_dir = '../../../../test_dataset/pos_dataset/pos_word_list_mydata_all_1507.txt'
-    neg_protein_dir = '../../../../test_dataset/neg_dataset/neg_word_list_1479.txt'
+    pos_protein_dir = '../../../Data/pos_dataset/pos_word_list_mydata_all_1507.txt'
+    neg_protein_dir = '../../../Data/neg_dataset/neg_word_list_1479.txt'
 
-    test_protein_path = '../../../../Saliency_output/test.xlsx'
+    test_protein_path = '../../Saliency_output/test.xlsx'
     # mydata_all_1507
     
     pos_seed = 0
@@ -597,7 +597,7 @@ if __name__== '__main__':
     test_label_ten = from_numpy(test_label)
     test_label_ten = test_label_ten.type(torch.LongTensor)
 
-    state_dict = torch.load('../../../../saliency_model/mydata_1507_RCNN_ECA_089-0.9930.pt')
+    state_dict = torch.load('../../saliency_model/mydata_1507_RCNN_ECA_089-0.9930.pt')
     model = RCNN(len(w2n_vocab)+1, 512, 100, 1, True)
     model = model.to(device)
     model.load_state_dict(state_dict)

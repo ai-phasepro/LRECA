@@ -293,7 +293,7 @@ def save_segment(savepath, max_segment_idx_list, max_protein_segment_list, prote
             
 
 if __name__== '__main__':
-    test_protein_path='../output/gradCAM1/gradCAM_noSoftmax_outFinal_protein_score/test/AIMP1-WT_statics.csv'
+    test_protein_path='../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/forsingle/test_statics.csv'
     # 注意test_protein_path与savepath保持一致
 
     train_proteins_scores_all = []
@@ -332,7 +332,7 @@ if __name__== '__main__':
     # compute_density_diff(train_proteins_names, train_proteins, log_density_list)
 
     # 找最大区域
-    segment_savepath = '../../../Saliency_output/LCRs_process/forsingle/density_segment/'
+    segment_savepath = '../../Saliency_output/LCRs_process/forsingle/density_segment/'
     if not os.path.exists(segment_savepath):
         os.makedirs(segment_savepath)
 
@@ -342,7 +342,7 @@ if __name__== '__main__':
     save_segment(f'{segment_savepath}true_density_segment_statics.csv', max_segment_idx_list, max_protein_segment_list, train_proteins_names, protein_segments_list, density_segments_list, process_density_segments_list, score_list, area_list, index_list)
     save_max_segment(f'{segment_savepath}max_segment.csv', max_segment_idx_list, max_protein_segment_list, train_proteins_names, index_list)
 
-    density_savepath = '../../../Saliency_output/LCRs_process/forsingle/density_map/'
+    density_savepath = '../../Saliency_output/LCRs_process/forsingle/density_map/'
     if not os.path.exists(density_savepath):
         os.makedirs(density_savepath)
     save_density(density_savepath +'LCRs_protein_densitymap_forsingle.csv', train_proteins_names, train_proteins, train_scores, log_density_list)
