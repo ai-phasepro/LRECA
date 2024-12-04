@@ -103,7 +103,7 @@ python RCNN_model/RCNN_ECA_save_model.py
 python RCNN_model/RCNN_ECA_save_model.py --pos_protein_dir "your pos_dataset path" --neg_protein_dir "your neg_dataset path"
 ```
 
-__Get contribution score and statics results__
+__Get contribution score of individual amino acids__
 
 ```python
 # obtaining the results of the contributing score of individual AAs from mydata
@@ -140,7 +140,7 @@ python code_for_model_testing/RCNN_ECA_saliency/saliency_function/statics/RCNN_E
 
 ```
 
-__LCRs split__
+__Identify critical amino acid sequences__
 
 ```python
 #obtaining the results of the contribution of AA segments in five FUS proteins
@@ -152,7 +152,7 @@ python code_for_model_testing/RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_
 python code_for_model_testing/RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_personal.py 
 ```
 
-**Get saliency results for your dataset**
+**Get model explainability results for your dataset**
 
 ```python
 cd code_for_model_testing/RCNN_ECA_saliency
@@ -164,9 +164,9 @@ python get_score_foesingle.py --seq test_seq
 python get_score_forsingle.py --dataset dasetname
 ```
 
-__Saliency results__
+__Model explainability results__
 
-The results of saliency are stored in the folder ./Demo/Saliency_output.
+The results of model explainability are stored in the folder ./Demo/Saliency_output.
 
 ***More explanations of the results are described in the Explanation of the results file(/Demo/Explanation of the results.txt).***
 
