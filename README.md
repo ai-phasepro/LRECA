@@ -91,19 +91,19 @@ The results of classification are stored in the folder ./Demo/classification_out
 python code_for_model_testing/RCNN_ECA_personal_test.py --pos_test_dir "your pos_dataset path for test" --neg_test_dir "your neg_dataset path for test"
 ```
 
-### Saliency
+### Model explainability
 
 __save LRECA model__
 
 ```python
-# save LRECA model trained from mydata for saliency
+# save LRECA model trained from mydata for model explainability
 python RCNN_model/RCNN_ECA_save_model.py 
 
 # personal dataset
 python RCNN_model/RCNN_ECA_save_model.py --pos_protein_dir "your pos_dataset path" --neg_protein_dir "your neg_dataset path"
 ```
 
-__Get protein score and statics results__
+__Get contribution score and statics results__
 
 ```python
 # obtaining the results of the contributing score of individual AAs from mydata
