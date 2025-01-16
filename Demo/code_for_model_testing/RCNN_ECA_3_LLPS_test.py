@@ -22,12 +22,13 @@ def readdata(root_dir, pos_protein_dir, neg_protein_dir, length, pos_seed, neg_s
         neg_word_list = f.read().splitlines()
     f.close
 
+    neg_word_list = neg_word_list[:length]  
+    pos_word_list = pos_word_list[:length] 
     np.random.seed(pos_seed) 
     np.random.shuffle(pos_word_list)  
     np.random.seed(neg_seed) 
     np.random.shuffle(neg_word_list)
-    neg_word_list = neg_word_list[:length]  
-    pos_word_list = pos_word_list[:length] 
+    
     pos_sequence = pos_word_list
     neg_sequence = neg_word_list
     return pos_sequence, neg_sequence
@@ -309,9 +310,9 @@ if __name__== '__main__':
     root_dir = '../../Data'
     pos_protein_dir = 'pos_dataset/pos_word_list_LLPS.txt'
     neg_protein_dir = 'neg_dataset/neg_word_list.txt'
-    pos_test_dir = '../test_dataset/pos_dataset/pos_word_list_LLPS_test.txt'
-    neg_test_dir = '../test_dataset/neg_dataset/neg_word_list_LLPS_test.txt'
-    model_path = '../trained_model/model_LLPS_10.pt'
+    pos_test_dir = '../test_dataset/pos_dataset/pos_LLPS_0.txt'
+    neg_test_dir = '../test_dataset/neg_dataset/neg_LLPS_0.txt'
+    model_path = '../trained_model/model_100-0.9773.pt'
     list_length = 253 # pos:253, 592, 4644, 668, neg:1490
 
     pos_seed_list = [5]           
@@ -343,9 +344,8 @@ if __name__== '__main__':
         neg_num = len(neg_sequence)
         pos_num = len(pos_sequence)
 
-        start = 0.9
+        start = 0.1
         interval = 0.1
-        val_split = 0.1
         val_split = 0.1
         
         total_tp = 0
@@ -363,8 +363,8 @@ if __name__== '__main__':
         test_pos_seq = pos_test_sequence
         test_neg_seq = neg_test_sequence
         
-        train_val_pos_seq = pos_sequence[:int(pos_num * start)]
-        train_val_neg_seq = neg_sequence[:int(neg_num * start)]
+        train_val_pos_seq = pos_sequence[int(pos_num * start):]
+        train_val_neg_seq = neg_sequence[int(neg_num * start):]
         train_val_pos_num = len(train_val_pos_seq)  
         train_val_neg_num = len(train_val_neg_seq)  
         train_val_pos_num = len(train_val_pos_seq)  
@@ -402,7 +402,6 @@ if __name__== '__main__':
         test_label_ten = test_label_ten.type(torch.LongTensor)
             
         state_dict = torch.load(model_path)
-        rcnn = RCNN(len(vocab)+1, 2048, 100, 1, True) 
         rcnn = RCNN(len(vocab)+1, 2048, 100, 1, True) 
         rcnn = rcnn.to(device)
         rcnn.load_state_dict(state_dict)
