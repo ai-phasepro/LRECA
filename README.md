@@ -48,7 +48,7 @@ Gradient-weighted Class Activation Mapping (Grad-CAM) was used to analysis the c
 Code run with python=3.8&torch=2.1.1+cu118
 
 ```python
-conda create -n pro python--3.8
+conda create -n pro python=3.8
 conda activate pro
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 pip install -r requirements.txt
