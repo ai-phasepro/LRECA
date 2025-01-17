@@ -156,28 +156,25 @@ def find_max_segment(proteins_names_list, proteins_list, density_list, savepath)
         protein_segments_list.append(protein_segments)
         score_list.append(segment_score)
         area_list.append(segment_area)
-        
-        plt.figure(figsize=(20,20))
-        plt.subplot(2,1,1)
-        plt.plot(np.arange(density_array.shape[0]), density_array)
-        plt.vlines([valleys[int(max_segment_idx)],valleys[int(max_segment_idx)+1]-1], np.min(density_array), np.max(density_array), linestyles='dashed', colors='red')
-        plt.xlabel('protein')
-        plt.ylabel('density')
-        plt.title(protein_name[0]+'_density_max_segment')
-
-        plt.subplot(2,1,2)
-        plt.plot(np.arange(process_density_array.shape[0]), process_density_array, color = "yellow")
-        plt.scatter(peaks, process_density_array[peaks], color="red")
-        plt.scatter(valleys, process_density_array[valleys], color="green")
-        plt.xlabel('protein')
-        plt.ylabel('process_density')
-        plt.title(protein_name[0]+'_density_peaks_and_valleys')
-        plt.savefig(savepath+'density_segment_picture/LCRs_true_density_segment_{}.png'.format(i))
-        print("picture_{} success".format(i))
 
     return index_list, max_segment_idx_list, max_protein_segment_list, protein_segments_list, density_segments_list, process_density_segments_list, score_list, area_list
 
+def save_max_segment(savepath, max_segment_idx_list, max_protein_segment_list, proteins_names, indexs_list):
+    for i, protein_name in enumerate(proteins_names):
 
+        indexs = indexs_list[i]
+        max_protein_segment = max_protein_segment_list[i]
+        max_segment_idx = max_segment_idx_list[i]
+
+        name = pd.Series(protein_name, index=['name'])   
+        max_idx = pd.Series(max_segment_idx, index=['max_segment_idx'])   
+        max_head_tail = pd.DataFrame([[indexs[int(max_segment_idx)],indexs[int(max_segment_idx)+1]-1]], index=['max_segment_head_tail_index'])  # 序列最大区域首尾下标
+        max_protein = pd.DataFrame([max_protein_segment], index=['max_segment_protein'])  
+        
+        name.to_csv(savepath, mode='a', header=False, index=True)
+        max_idx.to_csv(savepath, mode='a', header=False, index=True)
+        max_head_tail.to_csv(savepath, mode='a',header=False, index=True, float_format='%d')
+        max_protein.to_csv(savepath, mode='a', header=False, index=True)
 
 
 def save_segment(savepath, max_segment_idx_list, max_protein_segment_list, proteins_names, protein_segments_list, density_segments_list, process_density_segments_list, scores_list, areas_list, indexs_list):
@@ -251,6 +248,15 @@ if __name__== '__main__':
         density_list.append(np.exp(log_density))
 
     segment_savepath = '../../../Saliency_output/LCRs_process/personal/density_segment/'
+    if not os.path.exists(segment_savepath):
+        os.makedirs(segment_savepath)
+
+    index_list, max_segment_idx_list, max_protein_segment_list, protein_segments_list, density_segments_list, process_density_segments_list, score_list, area_list = find_max_segment(
+        train_proteins_names, train_proteins, density_list, segment_savepath)
+    
+    save_segment(f'{segment_savepath}true_density_segment_statics.csv', max_segment_idx_list, max_protein_segment_list, train_proteins_names, protein_segments_list, density_segments_list, process_density_segments_list, score_list, area_list, index_list)
+    save_max_segment(f'{segment_savepath}max_segment.csv', max_segment_idx_list, max_protein_segment_list, train_proteins_names, index_list)
+
     density_savepath = '../../../Saliency_output/LCRs_process/personal/density_map/LCRs_protein_densitymap_train'
     if not os.path.exists('../../../Saliency_output/LCRs_process/personal/density_map/'):
         os.makedirs('../../../Saliency_output/LCRs_process/personal/density_map/')
