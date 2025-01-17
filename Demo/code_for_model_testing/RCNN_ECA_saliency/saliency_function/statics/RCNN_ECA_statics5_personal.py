@@ -3,6 +3,10 @@ import pandas as pd
 import os
 import csv
 
+file_dir = os.path.dirname(os.path.abspath(__file__))
+print(file_dir)
+os.chdir(file_dir)
+
 FUS_test_path='../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/personal/test_statics.csv'
 save_file_path = '../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/personal/acid_avgscore.csv'
 save_count_path = '../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/personal/acid_count.csv'

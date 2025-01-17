@@ -4,6 +4,10 @@ import pandas as pd
 import numpy as np
 import argparse
 
+file_dir = os.path.dirname(os.path.abspath(__file__))
+print(file_dir)
+os.chdir(file_dir)
+
 def readverifydata(verify_protein_path):
     verify_data = pd.read_excel(verify_protein_path,header=None)
     sequence = verify_data.iloc[:, 1].values.ravel()

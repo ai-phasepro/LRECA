@@ -17,6 +17,10 @@ import copy
 import math
 # from torchsummaryX import summary
 
+file_dir = os.path.dirname(os.path.abspath(__file__))
+print(file_dir)
+os.chdir(file_dir)
+
 def readdata(root_dir, pos_protein_dir, neg_protein_dir,  pos_seed, neg_seed):
     pos_protein_path = os.path.join(root_dir, pos_protein_dir)
     neg_protein_path = os.path.join(root_dir, neg_protein_dir)
@@ -506,7 +510,7 @@ def visualize_protein_gradient(protein_list, gradients, lengths, dictionary, tru
 
 
         # 保存蛋白质的每个氨基酸和对应score
-        save_dir_path = '../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/forsingle/'
+        save_dir_path = '../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/forsingle/'
         if true_label[i] == 1:  # 阳性为1
 
             savepath = save_dir_path + 'pos_sequence_score.csv'
@@ -561,10 +565,10 @@ if __name__== '__main__':
     seed = 1
     set_seed(seed)
     root_dir = '.'
-    pos_protein_dir = '../../../Data/pos_dataset/pos_word_list_mydata_all_1507.txt'
-    neg_protein_dir = '../../../Data/neg_dataset/neg_word_list_1479.txt'
+    pos_protein_dir = '../../../../../Data/pos_dataset/pos_word_list_mydata_all_1507.txt'
+    neg_protein_dir = '../../../../../Data/neg_dataset/neg_word_list_1479.txt'
 
-    test_protein_path = '../../Saliency_output/test.xlsx'
+    test_protein_path = '../../../../Saliency_output/test.xlsx'
     # mydata_all_1507
     
     pos_seed = 0

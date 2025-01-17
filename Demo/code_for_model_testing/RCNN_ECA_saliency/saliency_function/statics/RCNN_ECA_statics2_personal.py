@@ -4,6 +4,9 @@ import os
 import csv
 import argparse
 
+file_dir = os.path.dirname(os.path.abspath(__file__))
+print(file_dir)
+os.chdir(file_dir)
 
 def save_test_protein_statics(savepath1, name, protein, score):
     sorted_id = sorted(range(len(score)), key=lambda k: score[k], reverse=True)

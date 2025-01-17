@@ -97,10 +97,10 @@ __save LRECA model__
 
 ```python
 # save LRECA model trained from mydata for model explainability
-python RCNN_model/RCNN_ECA_save_model.py 
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/RCNN_ECA_save_model.py 
 
 # personal dataset
-python RCNN_model/RCNN_ECA_save_model.py --pos_protein_dir "your pos_dataset path" --neg_protein_dir "your neg_dataset path"
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/RCNN_model/RCNN_ECA_save_model.py --pos_protein_dir "your pos_dataset path" --neg_protein_dir "your neg_dataset path"
 ```
 
 __Get contribution score of individual amino acids__

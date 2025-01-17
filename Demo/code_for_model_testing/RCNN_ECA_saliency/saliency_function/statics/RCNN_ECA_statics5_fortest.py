@@ -3,9 +3,13 @@ import pandas as pd
 import os
 import csv
 
-test_protein_path='../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/forsingle/test_statics.csv'
-save_file_path = '../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/forsingle/test_acid_avgscore.csv'
-save_file_path1 = '../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/forsingle/test_acid_sumscore.csv'
+file_dir = os.path.dirname(os.path.abspath(__file__))
+print(file_dir)
+os.chdir(file_dir)
+
+test_protein_path='../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/forsingle/test_statics.csv'
+save_file_path = '../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/forsingle/test_acid_avgscore.csv'
+save_file_path1 = '../../../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/forsingle/test_acid_sumscore.csv'
 
 train_proteins_scores_all = []
 with open(test_protein_path, 'r') as f:

@@ -11,6 +11,9 @@ import scipy
 from scipy import signal
 import heapq
 
+file_dir = os.path.dirname(os.path.abspath(__file__))
+print(file_dir)
+os.chdir(file_dir)
 
 def save_density(savepath, proteins_names_list, proteins_list, scores_list, density_list):
     for i, protein_name in enumerate(proteins_names_list):
