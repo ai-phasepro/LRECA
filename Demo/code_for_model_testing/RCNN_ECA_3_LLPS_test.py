@@ -310,9 +310,9 @@ if __name__== '__main__':
     root_dir = '../../Data'
     pos_protein_dir = 'pos_dataset/pos_word_list_LLPS.txt'
     neg_protein_dir = 'neg_dataset/neg_word_list.txt'
-    pos_test_dir = '../test_dataset/pos_dataset/pos_LLPS_0.txt'
-    neg_test_dir = '../test_dataset/neg_dataset/neg_LLPS_0.txt'
-    model_path = '../trained_model/model_100-0.9773.pt'
+    pos_test_dir = '../test_dataset/pos_dataset/pos_word_list_LLPS_test.txt'
+    neg_test_dir = '../test_dataset/neg_dataset/neg_word_list_LLPS_test.txt'
+    model_path = '../trained_model/model_LLPS_0.pt'
     list_length = 253 # pos:253, 592, 4644, 668, neg:1490
 
     pos_seed_list = [5]           
