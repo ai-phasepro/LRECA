@@ -59,8 +59,7 @@ cd Demo
 
 ```python
 # obtaining the results of classification from test_dataset/mydata_test
-cd code_for_model_testing
-python RCNN_ECA_3_mydata_test.py
+python code_for_model_testing/RCNN_ECA_3_mydata_test.py
 ```
 
 ### Run with other datasets
@@ -69,7 +68,7 @@ python RCNN_ECA_3_mydata_test.py
 # obtaining the results of classification from test_dataset/LLPS_test
 python code_for_model_testing/RCNN_ECA_3_LLPS_test.py
 # obtaining the results of classification from test_dataset/high_test(PhasepDB_highthrought)
-python code_for model_testing/RCNN_ECA_3_high_test.py
+python code_for_model_testing/RCNN_ECA_3_high_test.py
 # obtaining the results of classification from the test_dataset/R_test(PhasepDB_Reviewed)
 python code_for_model_testing/RCNN_ECA_3_R_test.py
 ```
@@ -158,7 +157,7 @@ python code_for_model_testing/RCNN_ECA_saliency/LCRs_process/split_LCRs_segment_
 cd code_for_model_testing/RCNN_ECA_saliency
 # Get saliency results for single seq
 # replace test_seq with your protein_seq 
-python get_score_foesingle.py --seq test_seq
+python get_score_forsingle.py --seq test_seq
 # Get saliency results for mutiple seqs
 # put your dataset file in Demo/test_dataset(the dataset file should be {datasetname}.xlsx ,and refer to test.xlsx for formatting of documents.)
 python get_score_forsingle.py --dataset dasetname
