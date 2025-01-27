@@ -12,6 +12,10 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 import pandas as pd
 import copy
 
+file_dir = os.path.dirname(os.path.abspath(__file__))
+print(file_dir)
+os.chdir(file_dir)
+
 def readdata(root_dir, pos_protein_dir, neg_protein_dir, length, pos_seed, neg_seed):
     pos_protein_path = os.path.join(root_dir, pos_protein_dir)
     neg_protein_path = os.path.join(root_dir, neg_protein_dir)
