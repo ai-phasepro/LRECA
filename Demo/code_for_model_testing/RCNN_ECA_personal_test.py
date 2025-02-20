@@ -287,7 +287,7 @@ if __name__== '__main__':
     parser.add_argument('--pos_test_dir', type=str, default = '../test_dataset/pos_dataset/pos_word_list_mydata_test.txt')
     parser.add_argument('--neg_test_dir', type=str, default = '../test_dataset/neg_dataset/neg_word_list_mydata_test.txt')
     parser.add_argument('--model_path', type=str, default = '../trained_model/model_mydata_1.pt')
-    parser.add_argument('--list_length', type=int, default = None, help = "for data balancing")
+    parser.add_argument('--list_length', type=int, default = 1479, help = "for data balancing")
     args = parser.parse_args()
     
     device = torch.device("cpu")
