@@ -17,7 +17,7 @@ file_dir = os.path.dirname(os.path.abspath(__file__))
 print(file_dir)
 os.chdir(file_dir)
 
-def readdata(pos_protein_dir, neg_protein_dir, length, pos_seed, neg_seed):
+def readdata(pos_protein_dir, neg_protein_dir,  pos_seed, neg_seed):
     pos_protein_path = pos_protein_dir
     neg_protein_path = neg_protein_dir
     with open(pos_protein_path, 'r') as f:
@@ -25,18 +25,19 @@ def readdata(pos_protein_dir, neg_protein_dir, length, pos_seed, neg_seed):
     f.close
     with open(neg_protein_path, 'r') as f:
         neg_word_list = f.read().splitlines()
-    f.close 
+    f.close
 
-    np.random.seed(pos_seed)  
+    np.random.seed(pos_seed)  #0/3/7/8/14/20/27/29/34/39
     np.random.shuffle(pos_word_list)  
-    np.random.seed(neg_seed)  
+    np.random.seed(neg_seed)  #1/4/8/9/15/21/28/30/35/40
     np.random.shuffle(neg_word_list)
-    if length is not None:
-        neg_word_list = neg_word_list[:length]  
-        pos_word_list = pos_word_list[:length] 
     pos_sequence = pos_word_list
     neg_sequence = neg_word_list
-    return pos_sequence, neg_sequence
+    pos_label = np.ones(shape=(len(pos_sequence,)))
+    neg_label = np.zeros(shape=(len(neg_sequence,)))
+    sequence = pos_sequence + neg_sequence
+    label = np.hstack((pos_label, neg_label))
+    return sequence, label
 
 def readdata_test(pos_protein_dir, neg_protein_dir):
     pos_protein_path = pos_protein_dir
@@ -51,6 +52,21 @@ def readdata_test(pos_protein_dir, neg_protein_dir):
     pos_sequence = pos_word_list
     neg_sequence = neg_word_list
     return pos_sequence, neg_sequence
+
+def readverifydata(verify_protein_path):
+    verify_data = pd.read_excel(verify_protein_path,header=None)
+    sequence = verify_data.iloc[:, 1].values.ravel()
+    name = verify_data.iloc[:, 0].values.ravel()
+    label = np.ones(shape=(sequence.shape))
+    print('Sequence', sequence.shape[0])
+    verify_seq = []
+    for i in range(sequence.shape[0]):
+        cur_s = ''.join(sequence[i])
+        cur_s = cur_s.lower()
+        cur_s = cur_s.strip()#去除空格符
+        verify_divided_in_word = ' '.join(cur_s)
+        verify_seq.append(verify_divided_in_word)
+    return name, verify_seq, label
     
 def word2Num(train, test, min=0, max=None, max_features=None):
     dic = {}
@@ -99,6 +115,20 @@ def collate_fn(data):
     data_label = torch.LongTensor(data_label)
     data_length = torch.LongTensor(data_length)
     return data_ten, data_label, data_length   
+
+def collate_fn1(data):    
+    data.sort(key=lambda tuple: len(tuple[0]), reverse=True)
+    data_length = [len(tuple[0]) for tuple in data]
+    data_ten, data_label, data_name = [], [], []
+    for tuple in data:
+        data_ten.append(tuple[0])
+        data_label.append(tuple[1])
+        data_name.append(tuple[2])
+    data_ten = pad_sequence(data_ten, batch_first=True,padding_value=0)
+    data_label = torch.LongTensor(data_label)
+    data_name = torch.LongTensor(data_name)
+    data_length = torch.LongTensor(data_length)
+    return data_ten, data_label, data_length, data_name  
     
 
 class Mydata(dataset.Dataset):
@@ -109,6 +139,20 @@ class Mydata(dataset.Dataset):
         protein = self.data[idx]
         label = self.label[idx]
         return protein, label
+    def __len__(self):
+        assert len(self.data)==len(self.label)
+        return len(self.data)
+    
+class Mydata_test(dataset.Dataset):
+    def __init__(self, data, label, name):
+        self.data = data
+        self.label = label
+        self.name = name
+    def __getitem__(self, idx):
+        protein = self.data[idx]
+        label = self.label[idx]
+        name = self.name[idx]
+        return protein, label, name
     def __len__(self):
         assert len(self.data)==len(self.label)
         return len(self.data)
@@ -284,10 +328,9 @@ if __name__== '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--pos_protein_dir', type=str, default = '../../Data/pos_dataset/pos_word_list_mydata_all_1507.txt')
     parser.add_argument('--neg_protein_dir', type=str, default = '../../Data/neg_dataset/neg_word_list_1479.txt')
-    parser.add_argument('--pos_test_dir', type=str, default = '../test_dataset/pos_dataset/pos_word_list_mydata_test.txt')
-    parser.add_argument('--neg_test_dir', type=str, default = '../test_dataset/neg_dataset/neg_word_list_mydata_test.txt')
-    parser.add_argument('--model_path', type=str, default = '../trained_model/model_mydata_1.pt')
-    parser.add_argument('--list_length', type=int, default = 1479, help = "for data balancing")
+    parser.add_argument('--pos_test_dir', type=str, default = '../test_dataset/2.xlsx')
+    parser.add_argument('--neg_test_dir', type=str, default = '../test_dataset/2.xlsx')
+    parser.add_argument('--model_path', type=str, default = '../trained_model/mydata_1507_RCNN_ECA_089-0.9930.pt')
     args = parser.parse_args()
     
     device = torch.device("cpu")
@@ -298,153 +341,90 @@ if __name__== '__main__':
     pos_test_dir = args.pos_test_dir
     neg_test_dir = args.neg_test_dir
     model_path = args.model_path
-    list_length = args.list_length
 
-    pos_seed_list = [20]
-    neg_seed_list = [21]
+    pos_seed = 0
+    neg_seed = 1
     
+    test_name, test_seq, test_label = readverifydata(pos_test_dir)
+    train_seq,train_label = readdata(pos_protein_dir, neg_protein_dir, pos_seed, neg_seed)
 
-    for i in range(len(pos_seed_list)):
-        pos_seed = pos_seed_list[i]
-        neg_seed = neg_seed_list[i]
-        pos_test_sequence,neg_test_sequence = readdata_test(pos_test_dir, neg_test_dir)
-        pos_sequence, neg_sequence = readdata(pos_protein_dir, neg_protein_dir, list_length, pos_seed, neg_seed)
+    # if not os.path.exists("../classification_output/personal_output"):
+    #     os.makedirs("../classification_output/personal_output")
+    # auc_save_csv = '../classification_output/personal_output/personal_test_roc_{}.csv'.format((i+1))
+    result_save_csv = '../classification_output/personal_output/result.csv'
+    # df_test = pd.DataFrame(columns=['y_true', 'y_score'])
+    # df_test.to_csv(auc_save_csv, mode='w', index=False)   
+    df_test = pd.DataFrame(columns=['acc', 'sen', 'spe', 'auc'])
+    df_test.to_csv(result_save_csv, index=False)
 
+    print(len(test_seq))
+    print(len(test_label))
+
+    train_num, test_num, w2n_vocab  = word2Num(train_seq, test_seq)
+
+    n2w_vocab = {v:k for k,v in w2n_vocab.items()}
+    proetin_vital_dict = {k:0 for k in w2n_vocab.keys()}
+    pos_proetin_vital_dict = proetin_vital_dict.copy()
+    neg_proetin_vital_dict = proetin_vital_dict.copy()
+           
+    train_data_size = len(train_num)
+    test_data_size = len(test_num) 
+    
+    test_ten = []
+    for singlelist in test_num:
+        test_ten.append(torch.LongTensor(singlelist))
+        
+    test_name_ten = from_numpy(np.array(range(len(test_name))))
+    
+    test_label_ten = from_numpy(test_label)
+    test_label_ten = test_label_ten.type(torch.LongTensor)
+    test_name_ten = test_name_ten.type(torch.LongTensor)
+            
+    state_dict = torch.load(model_path)
+    model = RCNN(len(w2n_vocab)+1, 512, 100, 1, True) 
+    model = model.to(device)
+    model.load_state_dict(state_dict)
+    model.eval()
+            
+    test = Mydata_test(test_ten, test_label_ten, test_name_ten)
+
+    test_dataloader = dataloader.DataLoader(dataset=test, batch_size=32,shuffle=False, collate_fn=collate_fn1)
+        
+    test_loss = 0
+    y_true_test = []
+    y_pre_test = []
+    y_score_test = []
+    y_name_test = []
+    total_labels_test = 0
+    
+    with torch.no_grad():
+        for input, label, length, name in test_dataloader:
+            input = input.to(device)
+            label = label.to(device)
+            length = length.to(device)
+
+            output = model(input, length)
+            _, predicted = torch.max(output,1)
+            y_pre_test.extend(predicted.cpu())
+            y_true_test.extend(label.cpu())
+            y_name_test.extend(name)
+            y_score_test.extend(torch.softmax(output, dim=-1)[:, 1].cpu().detach())
+            total_labels_test += label.size(0)
+                    
+            test_correct = metrics.accuracy_score(y_true_test, y_pre_test)
+            test_F1 = metrics.f1_score(y_true_test, y_pre_test, average='macro')
+            test_R = metrics.recall_score(y_true_test, y_pre_test)
+            test_precision = metrics.precision_score(y_true_test, y_pre_test)
+                    
         if not os.path.exists("../classification_output/personal_output"):
-            os.makedirs("../classification_output/personal_output")
-        auc_save_csv = '../classification_output/personal_output/personal_test_roc_{}.csv'.format((i+1))
-        result_save_csv = '../classification_output/personal_output/result_{}.csv'.format((i+1))
-        df_test = pd.DataFrame(columns=['y_true', 'y_score'])
-        df_test.to_csv(auc_save_csv, mode='w', index=False)   
-        df_test = pd.DataFrame(columns=['acc', 'sen', 'spe', 'auc'])
-        df_test.to_csv(result_save_csv, index=False)
-
-        neg_num = len(neg_test_sequence)
-        pos_num = len(pos_test_sequence)
-        print('pos_num=',pos_num) 
-        print('neg_num=',neg_num) 
-        
-        neg_num = len(neg_sequence)
-        pos_num = len(pos_sequence)
-
-        start = 0
-        interval = 0.1
-        val_split = 0.1
-        
-        total_tp = 0
-        total_p = 0
-        total_n = 0
-        total_tn = 0
-
-        save_sen = []
-        save_spe = []
-        save_acc = []
-
-        fold = 0
-        total_correct, total_F1, total_R, total_precision = [],[],[],[]
-
-
-        test_pos_seq = pos_test_sequence
-        test_neg_seq = neg_test_sequence
-        
-        train_val_pos_seq = pos_sequence[:int(pos_num*start)] + pos_sequence[int(pos_num*(start+interval)):]
-        train_val_neg_seq = neg_sequence[:int(neg_num * start)] + neg_sequence[int(neg_num * (start + interval)):]
-        train_val_pos_num = len(train_val_pos_seq) 
-        train_val_neg_num = len(train_val_neg_seq) 
-        np.random.shuffle(train_val_pos_seq)
-        np.random.shuffle(train_val_neg_seq)
-        val_pos_seq = train_val_pos_seq[:int(train_val_pos_num*val_split)]
-        train_pos_seq = train_val_pos_seq[int(train_val_pos_num*val_split):]
-        val_neg_seq = train_val_neg_seq[:int(train_val_neg_num*val_split)]
-        train_neg_seq = train_val_neg_seq[int(train_val_neg_num*val_split):]
-
-        test_y = np.hstack((np.zeros(shape=(len(test_neg_seq), )),
-                        np.ones(shape=(len(test_pos_seq), )))) 
-
-        print('test_pos', test_y[test_y == 1].shape)     
-        print('test_neg', test_y[test_y == 0].shape)     
-
-        train_seq = train_neg_seq + train_pos_seq
-        val_seq = val_neg_seq + val_pos_seq
-        train_val_seq = train_seq + val_seq
-        test_seq = test_neg_seq + test_pos_seq
-
-        _, test_num, vocab  = word2Num(train_seq, test_seq)
-        test_data_size = len(test_num)
-            
-            
-        test_ten = []
-        for list in test_num:
-            test_ten.append(torch.LongTensor(list))
-            
-        test_label_ten = from_numpy(test_y)
-        test_label_ten = test_label_ten.type(torch.LongTensor)
-            
-        state_dict = torch.load(model_path)
-        rcnn = RCNN(len(vocab)+1, 1024, 100, 1, True) 
-        rcnn = rcnn.to(device)
-        rcnn.load_state_dict(state_dict)
-        rcnn.eval()
-        print(rcnn)
-            
-        test = Mydata(test_ten, test_label_ten)
-
-        set_seed(seed)
-        test_dataloader = dataloader.DataLoader(dataset=test, batch_size=32,shuffle=True, collate_fn=collate_fn)
-        
-        test_loss = 0
-        y_true_test = []
-        y_pre_test = []
-        y_score_test = []
-        total_labels_test = 0
-        with torch.no_grad():
-            for input, label, length in test_dataloader:
-                input = input.to(device)
-                label = label.to(device)
-                length = length.to(device)
-
-                output = rcnn(input, length)
-                _, predicted = torch.max(output,1)
-                y_pre_test.extend(predicted.cpu())
-                y_true_test.extend(label.cpu())
-                y_score_test.extend(torch.softmax(output, dim=-1)[:, 1].cpu().detach())
-                total_labels_test += label.size(0)
-                    
-                test_correct = metrics.accuracy_score(y_true_test, y_pre_test)
-                test_F1 = metrics.f1_score(y_true_test, y_pre_test, average='macro')
-                test_R = metrics.recall_score(y_true_test, y_pre_test)
-                test_precision = metrics.precision_score(y_true_test, y_pre_test)
-                test_auc = metrics.roc_auc_score(y_true_test, y_score_test)
-
-                save_content = 'Test: Correct: %.5f, Precision: %.5f, R: %.5f, F1(macro): %.5f, AUC:%.5f, test_loss: %f' % \
-                            (test_correct, test_precision, test_R, test_F1, test_auc, test_loss)
-                print(save_content)
-                    
-                y_true_data = [i.item() for i in y_true_test]
-                y_score_data = [i.item() for i in y_score_test]
-                y_pre_data = [i.item() for i in y_pre_test]
-                auc_dict = {'y_true':y_true_data, 'y_score':y_score_data}
-                auc_score = pd.DataFrame(auc_dict)
-                auc_score.to_csv(auc_save_csv, mode='a', header=False, index=False, float_format='%.4f')
-                    
-            p = np.array(y_pre_data)[np.array(y_true_data) == 1]
-            tp = p[p == 1]
-            n = np.array(y_pre_data)[np.array(y_true_data) == 0]
-            tn = n[n == 0]
-                    
-            sen = tp.shape[0] / p.shape[0] if p.shape[0] > 0 else 1
-            spe = tn.shape[0] / n.shape[0] if n.shape[0] > 0 else 1
-            acc = (tp.shape[0] + tn.shape[0]) / (p.shape[0] + n.shape[0])
-            auc = metrics.roc_auc_score(y_true_data, y_score_data)
-            print('sen:', sen)
-            print('spe:', spe)
-            print('acc:', acc)
-            print('auc:', auc)
-                
-            list1 = [test_loss, test_correct, test_F1, test_R, test_precision, (tn.shape[0] / n.shape[0] if n.shape[0] > 0 else 1), test_auc]
-            test_dict = {'acc':[acc], 'sen':[sen], 'spe':[spe], 'auc':[auc]}
-            list.extend(list1)
-            data_test = pd.DataFrame([list])
-            test_score = pd.DataFrame(test_dict)
-            print(test_score)
-            test_score.to_csv(result_save_csv, mode='a', header=False, index=False, float_format='%.4f')
+                os.makedirs("../classification_output/personal_output")
+        auc_save_csv = '../classification_output/personal_output/personal_test_roc.csv'
+        df_test = pd.DataFrame(columns=['Name', 'Seq', 'y_true', 'y_score', 'y_pre'])
+        df_test.to_csv(auc_save_csv,mode='w', index=False)    # rcnn_2使用全部数据， rcnn_1使用±668数据
+        y_true_data = [i.item() for i in y_true_test]
+        y_score_data = [i.item() for i in y_score_test]
+        y_pre_data = [i.item() for i in y_pre_test]
+        y_name_data = [i.item() for i in y_name_test]
+        auc_dict = {'Name': [test_name[i] for i in y_name_data], 'Seq': [test_seq[i] for i in y_name_data] , 'y_true':y_true_data, 'y_score':y_score_data, 'y_pre': np.array(y_pre_data)}
+        auc_score = pd.DataFrame(auc_dict)
+        auc_score.to_csv(auc_save_csv, mode='a', header=False, index=False, float_format='%.4f')
