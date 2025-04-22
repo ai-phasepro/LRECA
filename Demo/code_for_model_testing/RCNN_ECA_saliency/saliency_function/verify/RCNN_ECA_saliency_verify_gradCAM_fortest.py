@@ -560,7 +560,7 @@ def num2word(input, length, dictionary):
 
 
 if __name__== '__main__':
-    device = torch.device("cuda")
+    device = torch.device("cpu")
     seed = 1
     set_seed(seed)
     root_dir = '.'
