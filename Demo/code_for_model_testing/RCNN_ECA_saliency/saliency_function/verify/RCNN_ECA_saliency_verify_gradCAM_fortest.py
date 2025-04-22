@@ -600,7 +600,7 @@ if __name__== '__main__':
     test_label_ten = from_numpy(test_label)
     test_label_ten = test_label_ten.type(torch.LongTensor)
 
-    state_dict = torch.load('../../../../saliency_model/mydata_1507_RCNN_ECA_089-0.9930.pt')
+    state_dict = torch.load('../../../../saliency_model/mydata_1507_RCNN_ECA_089-0.9930.pt', map_location=device)
     model = RCNN(len(w2n_vocab)+1, 512, 100, 1, True)
     model = model.to(device)
     model.load_state_dict(state_dict)
