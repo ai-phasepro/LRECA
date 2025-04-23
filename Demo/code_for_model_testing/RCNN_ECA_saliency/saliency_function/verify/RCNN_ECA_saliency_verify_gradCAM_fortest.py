@@ -366,7 +366,7 @@ def calculate_outputs_and_gradients(input, length, model, target_label_idx):
     gradsnp = gradsnp.transpose(0, 2, 1)  
     featuresnp = output_feature.detach().cpu().data.numpy()
     featuresnp = featuresnp.transpose(0, 2, 1) 
-    create_cam(featuresnp, gradsnp, length, cam_list)
+    create_cam_pp(featuresnp, gradsnp, length, cam_list)
     gradient_list.append(gradsnp)
     
     return gradient_list, cam_list, target_label_idx
