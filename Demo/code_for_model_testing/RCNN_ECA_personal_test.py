@@ -380,7 +380,7 @@ if __name__== '__main__':
     test_label_ten = test_label_ten.type(torch.LongTensor)
     test_name_ten = test_name_ten.type(torch.LongTensor)
             
-    state_dict = torch.load(model_path)
+    state_dict = torch.load(model_path, map_location="cpu")
     model = RCNN(len(w2n_vocab)+1, 512, 100, 1, True) 
     model = model.to(device)
     model.load_state_dict(state_dict)
