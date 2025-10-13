@@ -96,10 +96,10 @@ __save LRECA model__
 
 ```python
 # save LRECA model trained from mydata for model explainability
-python code_for_model_testing/RCNN_ECA_saliency/saliency_function/RCNN_ECA_save_model.py 
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/RCNN_ECA_save_model.py
 
 # personal dataset
-python code_for_model_testing/RCNN_ECA_saliency/saliency_function/RCNN_model/RCNN_ECA_save_model.py --pos_protein_dir "your pos_dataset path" --neg_protein_dir "your neg_dataset path"
+python code_for_model_testing/RCNN_ECA_saliency/saliency_function/RCNN_ECA_save_model.py --pos_protein_dir "your pos_dataset path" --neg_protein_dir "your neg_dataset path"
 ```
 
 __Get contribution score of individual amino acids__
@@ -174,3 +174,4 @@ The results of model explainability are stored in the folder ./Demo/Saliency_out
 ## License
 
 The use of these publicly available datasets must comply with the provisions of these public data sets. This code is to be used only for educational and research purposes. Any commercial use, including the distribution, sale, lease, license, or other transfer of the code to a third party, is prohibited.
+
