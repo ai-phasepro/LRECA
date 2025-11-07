@@ -16,6 +16,10 @@ import copy
 # from torchsummaryX import summary
 import random
 
+file_dir = os.path.dirname(os.path.abspath(__file__))
+print(file_dir)
+os.chdir(file_dir)
+
 def readdata(pos_protein_dir, neg_protein_dir, length, pos_seed, neg_seed):
     pos_protein_path = pos_protein_dir
     neg_protein_path = neg_protein_dir
