@@ -75,6 +75,8 @@ python code_for_model_testing/RCNN_ECA_3_R_test.py
 
 ### Run with personal datasets
 
+You need to prepare positive and negative datasets saved in the xlsx file format. The first column should contain the protein name, and the second column should contain the protein sequence. No header is required.
+
 ```python
 # output to Demo/classification_output/personal_output
 python code_for_model_testing/RCNN_ECA_personal_test.py --pos_test_dir "your pos_dataset path for test" --neg_test_dir "your neg_dataset path for test"
@@ -86,8 +88,10 @@ The results of classification are stored in the folder ./Demo/classification_out
 
 ### Train with personal datasets
 
+You need to prepare positive and negative datasets saved in .txt format, with each line containing one protein sequence. Protein names are not required. Results will be saved under “LRECA/Save_model_personal”. Only performance metrics will be saved. To save the trained model, use the command from the “save LRECA model” section in the “Model explainability” subsection below.
+
 ```python
-python code_for_model_testing/RCNN_ECA_personal_test.py --pos_test_dir "your pos_dataset path for test" --neg_test_dir "your neg_dataset path for test"
+python ../RCNN_model/RCNN_ECA_personal.py --pos_test_dir "your pos_dataset path for test" --neg_test_dir "your neg_dataset path for test"
 ```
 
 ### Model explainability
@@ -174,3 +178,4 @@ The results of model explainability are stored in the folder ./Demo/Saliency_out
 ## License
 
 The use of these publicly available datasets must comply with the provisions of these public data sets. This code is to be used only for educational and research purposes. Any commercial use, including the distribution, sale, lease, license, or other transfer of the code to a third party, is prohibited.
+
