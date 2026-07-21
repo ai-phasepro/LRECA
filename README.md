@@ -71,6 +71,8 @@ python code_for_model_testing/RCNN_ECA_3_LLPS_test.py
 python code_for_model_testing/RCNN_ECA_3_high_test.py
 # obtaining the results of classification from the test_dataset/R_test(PhasepDB_Reviewed)
 python code_for_model_testing/RCNN_ECA_3_R_test.py
+# obtaining the results of classification from the test_dataset/human_test
+python code_for_model_testing/RCNN_ECA_3_human_test.py
 ```
 
 ### Run with personal datasets
