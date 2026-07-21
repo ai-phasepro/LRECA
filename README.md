@@ -14,13 +14,13 @@ This code was implemented using the Pytorch framework (version 2.1.1). More deta
 
 Sources codes included three folders, the /RCNN_model, the /Data, and the /RCNN_ECA_saliency. All codes of the demo are included in the fold /Demo.
 
-The folder /RCNN_model contains four files, RCNN_ECA_3_LLPS.py, RCNN_ECA_3_R.py, RCNN_ECA_3_high.py, and RCNN_ECA_3_madata.py, which contain the code for training and testing the model using 10-fold cross validation on the datasets of LLPS and PDB, phaspDB_reviewed and PDB, phaspDB_highthroughput and PDB, and inhouse-dataset and PDB, respectively.
+The folder /RCNN_model contains five dataset-specific files, RCNN_ECA_3_LLPS.py, RCNN_ECA_3_R.py, RCNN_ECA_3_high.py, RCNN_ECA_3_mydata.py, and RCNN_ECA_3_human.py, which contain the code for training and testing the model using 10-fold cross validation on the datasets of LLPS and PDB, phaspDB_reviewed and PDB, phaspDB_highthroughput and PDB, inhouse-dataset and PDB, and the balanced Human dataset, respectively.
 
-The folder /Data contains the negative data from the PDB database and the positive data from public databases and the in-house dataset (mydata).
+The folder /Data contains the negative data from the PDB database, the positive data from public databases and the in-house dataset (mydata), and the Human positive and negative sequence datasets.
 
 The folder /RCNN_ECA_saliency contains the files for computing the contribution of each AA and AA segment. Specifically, /RCNN_ECA_saliency /saliency_function /method /RCNN_ECA_saliency_gradCAM.py contain the code for obtained the contribution of each AA. /RCNN_ECA_saliency /saliency_function /RCNN_ECA_save_model contain the well trained model and corresponding parameters. The folder /RCNN_ECA_saliency /LCRs_process contain the code for identifying the main contributing AA segments in a protein for LLPS based on the results of the contributions of each AA.
 
-The folder /Demo contains six folds. /Demo/trained model contains four trained models for the four datasets. /Demo/test_dataset contains the testing data for the four datasets in the demo. /Demo/code_for_model_testing contains the codes for testing. /Demo/classification_output contains the testing results of the trained models on the testing datasets in the demo. /Demo/ saliency_model contains the trained model used for computing the contribution of each AA and AA segment. /Demo/Saliency_output contains the results of the contributing score of individual AAs and AA segments.
+The folder /Demo contains six folds. /Demo/trained model contains the trained models for the five datasets. /Demo/test_dataset contains the testing data for the five datasets in the demo. /Demo/code_for_model_testing contains the codes for testing, including RCNN_ECA_3_human_test.py for the Human dataset. /Demo/classification_output contains the testing results of the trained models on the testing datasets in the demo. /Demo/ saliency_model contains the trained model used for computing the contribution of each AA and AA segment. /Demo/Saliency_output contains the results of the contributing score of individual AAs and AA segments.
 You can also visit our [website](http://www.ai-phasepro.pro/) for the whole datasets
 
 ## Model
@@ -86,7 +86,8 @@ python code_for_model_testing/RCNN_ECA_personal_test.py --pos_test_dir "your pos
 
 ### Classification Results
 
-The results of classification are stored in the folder ./Demo/classification_output, including protein score, accuracy, sensitivity, specificity and area under the ROC curve (AUC) for the four datasets.
+The results of classification are stored in the folder ./Demo/classification_output, including protein score, accuracy, sensitivity, specificity and area under the ROC curve (AUC) for the five datasets. Human results are stored in ./Demo/classification_output/human_output.
+
 
 ### Train with personal datasets
 
@@ -180,4 +181,5 @@ The results of model explainability are stored in the folder ./Demo/Saliency_out
 ## License
 
 The use of these publicly available datasets must comply with the provisions of these public data sets. This code is to be used only for educational and research purposes. Any commercial use, including the distribution, sale, lease, license, or other transfer of the code to a third party, is prohibited.
+
 
