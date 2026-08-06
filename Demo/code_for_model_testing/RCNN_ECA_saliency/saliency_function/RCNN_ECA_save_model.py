@@ -361,7 +361,13 @@ if __name__== '__main__':
         save_content = 'Train: Correct: %.5f, Precision: %.5f, R: %.5f, F1(macro): %.5f, AUC:%.5f, train_loss: %f' % \
                         (train_correct, train_precision, train_R, train_F1, train_auc, train_loss)
         print(save_content)
-    
+        
     save_model = rcnn
-    save_name = save_path + 'mydata_1507_RCNN_ECA_parallel_{:03d}-{:.4f}.pt'.format((i+1), train_correct)
-    torch.save(save_model.state_dict(),save_name)
+    save_name = os.path.join(
+        save_path,
+        'mydata_1507_RCNN_ECA_parallel_{:03d}-{:.4f}.pt'.format(
+            i + 1,
+            train_correct
+        )
+    )
+    torch.save(save_model.state_dict(), save_name)
