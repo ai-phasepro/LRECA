@@ -27,9 +27,22 @@ if args.dataset:
 
     test_name, test_seq, _ = readverifydata("../../test_dataset/" + dataname +".xlsx")
 elif args.seq:
-    test_seq = args.seq
-    test_name = "test_seq"
-    dataname = test_name
+    test_seq = [args.seq]
+    test_name = ["test_seq"]
+    dataname = "test_seq"
+
+os.makedirs(
+    "../../Saliency_output/gradCAM/gradCAM_noSoftmax_outAll_protein_score/forsingle",
+    exist_ok=True
+)
+os.makedirs(
+    "../../Saliency_output/LCRs_process/forsingle/density_segment",
+    exist_ok=True
+)
+os.makedirs(
+    "../../Saliency_output/LCRs_process/forsingle/density_map",
+    exist_ok=True
+)
 
 for idx, seq in enumerate(test_seq):
     pd_dict = {'name':[test_name[idx], test_name[idx]], 'seq':[seq, seq]}
