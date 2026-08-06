@@ -84,7 +84,7 @@ You need to prepare positive and negative datasets saved in the xlsx file format
 
 ```python
 # output to Demo/classification_output/personal_output
-python ../RCNN_model/RCNN_ECA_personal.py --pos_protein_dir "your pos_dataset path for training" --neg_protein_dir "your neg_dataset path for training"
+python code_for_model_testing/RCNN_ECA_personal_test.py --pos_test_dir "your pos_dataset path for test" --neg_test_dir "your neg_dataset path for test"
 ```
 
 ### Classification Results
@@ -97,7 +97,7 @@ The results of classification are stored in the folder ./Demo/classification_out
 You need to prepare positive and negative datasets saved in .txt format, with each line containing one protein sequence. Protein names are not required. Results will be saved under “LRECA/Save_model_personal”. Only performance metrics will be saved. To save the trained model, use the command from the “save LRECA model” section in the “Model explainability” subsection below.
 
 ```python
-python ../RCNN_model/RCNN_ECA_personal.py --pos_test_dir "your pos_dataset path for test" --neg_test_dir "your neg_dataset path for test"
+python ../RCNN_model/RCNN_ECA_personal.py --pos_protein_dir "your pos_dataset path for training" --neg_protein_dir "your neg_dataset path for training"
 ```
 
 ### Model explainability
