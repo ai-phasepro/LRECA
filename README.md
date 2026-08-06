@@ -84,7 +84,7 @@ You need to prepare positive and negative datasets saved in the xlsx file format
 
 ```python
 # output to Demo/classification_output/personal_output
-python code_for_model_testing/RCNN_ECA_personal_test.py --pos_test_dir "your pos_dataset path for test" --neg_test_dir "your neg_dataset path for test"
+python ../RCNN_model/RCNN_ECA_personal.py --pos_protein_dir "your pos_dataset path for training" --neg_protein_dir "your neg_dataset path for training"
 ```
 
 ### Classification Results
