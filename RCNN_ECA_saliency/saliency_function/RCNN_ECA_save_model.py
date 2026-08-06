@@ -409,12 +409,14 @@ if __name__== '__main__':
         print(save_content)
     
     save_model = rcnn
-    # save_name = save_path + '20211208_RCNN_ECA_{:03d}-{:.4f}.pt'.format((i+1), train_correct)
-    # save_name = save_path + 'LLPS_RCNN_ECA_{:03d}-{:.4f}.pt'.format((i+1), train_correct)
-    # save_name = save_path + 'PhasepDB_R_RCNN_ECA_{:03d}-{:.4f}.pt'.format((i+1), train_correct)
-    # save_name = save_path + 'PhasepDB_T_RCNN_ECA_{:03d}-{:.4f}.pt'.format((i+1), train_correct)
-    save_name = save_path + 'mydata_1507_RCNN_ECA_parallel_{:03d}-{:.4f}.pt'.format((i+1), train_correct)
-    torch.save(save_model.state_dict(),save_name)
+    save_name = os.path.join(
+        save_path,
+        'mydata_1507_RCNN_ECA_parallel_{:03d}-{:.4f}.pt'.format(
+            i + 1,
+            train_correct
+        )
+    )
+    torch.save(save_model.state_dict(), save_name)
 
                 
     
