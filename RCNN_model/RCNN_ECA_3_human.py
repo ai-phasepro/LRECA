@@ -16,8 +16,8 @@ from torch.utils.data import DataLoader, Dataset
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-DEFAULT_POS_PATH = SCRIPT_DIR.parent / "Data" / "pos_dataset" / "human_pos_word_list.txt"
-DEFAULT_NEG_PATH = SCRIPT_DIR.parent / "Data" / "neg_dataset" / "human_neg_word_list.txt"
+DEFAULT_POS_PATH = SCRIPT_DIR.parent / "Data" / "pos_dataset" / "pos_word_list_human.txt"
+DEFAULT_NEG_PATH = SCRIPT_DIR.parent / "Data" / "neg_dataset" / "neg_word_list_human.txt"
 DEFAULT_OUTPUT_DIR = SCRIPT_DIR / "human_10fold_outputs"
 
 
