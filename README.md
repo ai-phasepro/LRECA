@@ -170,7 +170,7 @@ cd code_for_model_testing/RCNN_ECA_saliency
 python get_score_forsingle.py --seq test_seq
 # Get saliency results for mutiple seqs
 # put your dataset file in Demo/test_dataset(the dataset file should be {datasetname}.xlsx ,and refer to test.xlsx for formatting of documents.)
-python get_score_forsingle.py --dataset dasetname
+python get_score_forsingle.py --dataset datasetname
 ```
 
 __Model explainability results__
