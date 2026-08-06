@@ -27,8 +27,8 @@ PROJECT_DIR = DEMO_DIR.parent
 from RCNN_ECA_personal_test import Mydata, RCNN, collate_fn
 
 
-DEFAULT_TRAIN_POS = PROJECT_DIR / "Data" / "pos_dataset" / "human_pos_word_list.txt"
-DEFAULT_TRAIN_NEG = PROJECT_DIR / "Data" / "neg_dataset" / "human_neg_word_list.txt"
+DEFAULT_TRAIN_POS = PROJECT_DIR / "Data" / "pos_dataset" / "pos_word_list_human.txt"
+DEFAULT_TRAIN_NEG = PROJECT_DIR / "Data" / "neg_dataset" / "neg_word_list_human.txt"
 DEFAULT_TEST_POS = DEMO_DIR / "test_dataset" / "pos_dataset" / "pos_word_list_human_test.txt"
 DEFAULT_TEST_NEG = DEMO_DIR / "test_dataset" / "neg_dataset" / "neg_word_list_human_test.txt"
 DEFAULT_MODEL = DEMO_DIR / "trained_model" / "human_1_RCNN_ECA_parallel_089-0.9802.pt"
