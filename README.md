@@ -180,6 +180,12 @@ The results of model explainability are stored in the folder ./Demo/Saliency_out
 
 ## License
 
-The use of these publicly available datasets must comply with the provisions of these public data sets. This code is to be used only for educational and research purposes. Any commercial use, including the distribution, sale, lease, license, or other transfer of the code to a third party, is prohibited.
+The software in this repository is licensed under the
+[PolyForm Noncommercial License 1.0.0](LICENSE).
+
+Noncommercial use, modification, and redistribution are permitted.
+Commercial use requires separate written permission from the copyright holder.
+
+Third-party datasets remain subject to the terms and licenses of their original sources.
 
 
