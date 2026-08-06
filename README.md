@@ -45,9 +45,12 @@ Gradient-weighted Class Activation Mapping (Grad-CAM) was used to analysis the c
 
 ### Install Requirement
 
-Code run with python=3.8&torch=2.1.1+cu118
+Code runs with Python 3.8 and PyTorch 2.1.1+cu118.
 
-```python
+```bash
+git clone https://github.com/ai-phasepro/LRECA.git
+cd LRECA
+
 conda create -n pro python=3.8
 conda activate pro
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
