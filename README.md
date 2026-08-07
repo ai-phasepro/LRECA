@@ -184,12 +184,16 @@ The results of model explainability are stored in the folder ./Demo/Saliency_out
 
 ## License
 
-The software in this repository is licensed under the
-[PolyForm Noncommercial License 1.0.0](LICENSE).
+## License
 
-Noncommercial use, modification, and redistribution are permitted.
-Commercial use requires separate written permission from the copyright holder.
+The source code in this repository is licensed under the
+[MIT License](LICENSE).
 
-Third-party datasets remain subject to the terms and licenses of their original sources.
+LRECA is open-source software. The code may be used, copied, modified,
+merged, published, distributed, sublicensed, and sold in accordance with
+the MIT License.
+
+Third-party datasets, pretrained models, and other external materials remain
+subject to the terms and licenses of their original sources.
 
 
